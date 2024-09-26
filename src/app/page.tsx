@@ -6,7 +6,6 @@ export default function Home() {
   return (
     <>
       <Header/>
-      <p>Je suis un text pour tester</p>
     </>
     
 
