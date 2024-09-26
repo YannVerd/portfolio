@@ -1,10 +1,10 @@
 import React, {useRef,useState, useEffect} from "react";
-
+import Image from "next/image";
 
 
 export default function Header(){
 
-    const links = [{name: "Git", link: "#"}, {name: "LinkedIn", link: "#"}, {name: "CV", link: "#"}]
+    const links = [{name: "Git", img:"/github-50.png", link: "#"}, {name: "LinkedIn", img:"/linkedin-50.png",link: "#"}, {name: "CV", img:"/cv-50.png",link: "#"}]
     const sections = [{name: "Présentation" , id: "#"}, {name: "Compétences" , id: "#"}, {name: "Projets" , id: "#"} ]
 
     const [isOpen, setIsOpen] = useState(false);
@@ -41,10 +41,15 @@ export default function Header(){
                 <div className="flex flex-col w-auto absolute -left-40 mt-1">
                     {links.map( (link, index) => {
                         return (
-                            <a 
+                            <button
                                 key={index} 
                                 style={{ transitionDelay: `${index * 100}ms`}}
-                                className={`bg-white hover:bg-gray-200 hover:shadow-inner border-2 p-4 transform transition-all duration-500 ${isOpen ? "translate-x-40": "-translate-x-40"}`} href={link.link}>{link.name}</a>
+                                className={
+                                    `hover:bg-gray-200  p-4 flex justify-around items-center
+                                        hover:shadow-inner hover:translate-x-40
+                                        transform transition-all duration-500 ${isOpen ? "translate-x-24": "-translate-x-0"}`
+                                } 
+                                ><p>{link.name}</p><Image src={link.img} width={50} height={50} alt={link.name}></Image></button>
                             
                         );
                         
