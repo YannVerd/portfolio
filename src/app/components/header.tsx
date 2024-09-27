@@ -2,6 +2,7 @@ import React, {useRef,useState, useEffect} from "react";
 import MenuOptions from "./menuOptions";
 import MenuBurger from "./burgerMenu";
 import BurgerMenu from "./burgerMenu";
+import SwitcherTheme from "./switcherTheme";
 
 
 
@@ -14,14 +15,14 @@ export default function Header(){
     
 
     return (
-        <header className="p-2 w-[98] h-16 flex justify-between sticky">
+        <header className="p-2 w-full h-16 flex justify-between sticky border-b-2 border-cv hover:animate-glowBlue">
             <div>
                 {/* responsive menu burger: display or not the burger menu depends on screen size
                     When the screen size is too small, we hide the menu options and display the burger menu. 
                     The user can then display the links whenever he or she wishes, without any discomfort.
                 */}
                 <BurgerMenu /> 
-                <div className="hidden md:flex flex-col w-auto absolute -left-48 mt-1 ">
+                <div className="hidden md:flex flex-col w-auto absolute top-40 -left-48 mt-1 ">
                     {links.map( (link, index) => {
                         return (
                             <MenuOptions index={index} key={index} isOpen={true} name={link.name} img={link.img} imgWhite={link.imgWhite}/>
@@ -31,14 +32,15 @@ export default function Header(){
                     
                 </div>
             </div>
-            <nav className="flex w-[70%] lg:w-[50%] justify-between items-center mr-6">
-                {sections.map((section, index) => {
-                    return (
-                        <a key={index} className="hover:decoration-cv underline font-bold text-2xl" href={section.id}>{section.name}</a>
-                    );
-                })
-                    
+            <nav className="flex w-[80%] lg:w-[50%] justify-between items-center mr-6">
+                {
+                    sections.map((section, index) => {
+                        return (
+                            <a key={index} className="hover:text-secondary hover:decoration-secondary hover:animate-blink underline font-bold text-2xl" href={section.id}>{section.name}</a>
+                        );
+                    })                  
                 }
+                <SwitcherTheme />
             </nav>
            
                  
