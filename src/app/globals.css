@@ -5,6 +5,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --github: #ff6d16;
+  --githubLight: #ff8b47; 
+  --linkedin: #168bff;
+  --linkedinLight: #5BADFF;
+  --cv: #048b9a;
+  --cvLight: #74b1bb;
 }
 
 @media (prefers-color-scheme: dark) {
