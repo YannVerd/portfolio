@@ -14,6 +14,12 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+export const metadata: Metadata = {
+  title: "portfolio",
+  description: "Yann Verdier's portfolio",
+};
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
