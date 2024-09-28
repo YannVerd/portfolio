@@ -23,18 +23,20 @@ const config: Config = {
           '50%': { boxShadow: '0 0 20px 8px rgba(4, 139, 154, 1)' }, // more lightning in middle
         },
         typewriter: {
-          '0%': { width: '0%' }, 
-          '100%': { width: '100%' },
+          '0%': { width: '0ch' }, 
+          '70%': { width: '37ch' }, 
+          '90%': { width: '37ch' }, 
+          '100%': { width: '0ch' },
         },
         cursor: {
           '0%, 100%': { borderColor: 'transparent' }, 
-          '50%': { borderColor: 'black' }, 
+          '50%': { borderColor: '#048b9a' }, 
         },
       },
       animation: {
         blink: 'blink 3s infinite', 
         glowBlue: 'glowBlue 1.5s infinite',
-        typewriter: 'typewriter 4s steps(30) 1s 1 normal both',
+        typewriter: 'typewriter 5s steps(37, end) 1s infinite ',
         cursor: 'blink 1s steps(2, start) infinite',
       },
     },

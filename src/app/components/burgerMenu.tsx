@@ -31,7 +31,7 @@ export default function BurgerMenu(props: IHeader){
     //   }, [wrapperRef]);
    
     return(
-        <div className="md:invisible">
+        <div className="lg:invisible">
             <button onClick={handleBurgerMenu}
                     // ref={wrapperRef}
                     className={`group hover:bg-secondary h-10 w-10 flex flex-col justify-center items-center border-2 rounded-md gap-1 ${isOpen && "bg-gray-400"}`}>

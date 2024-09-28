@@ -17,14 +17,14 @@ export default function Header(props: IHeader){
     
 
     return (
-        <header className="p-2 w-full h-20 flex justify-between sticky border-b-2 border-cv hover:animate-glowBlue">
+        <header className="p-2 w-full h-auto pb-4 flex justify-between sticky border-b-2 border-cv hover:animate-glowBlue">
             <div>
                 {/* responsive menu burger: display or not the burger menu depends on screen size
                     When the screen size is too small, we hide the menu options and display the burger menu. 
                     The user can then display the links whenever he or she wishes, without any discomfort.
                 */}
                 <BurgerMenu hook={props.hook}/> 
-                <div className="hidden md:flex flex-col w-auto absolute top-40 -left-48 mt-1 ">
+                <div className="hidden lg:flex flex-col w-auto absolute top-40 -left-48 mt-1">
                     {links.map( (link, index) => {
                         return (
                             <MenuOptions index={index} key={index} isOpen={true} name={link.name} img={link.img} imgWhite={link.imgWhite} link={link.link} hook={props.hook}/>
@@ -34,7 +34,7 @@ export default function Header(props: IHeader){
                     
                 </div>
             </div>
-            <nav className="flex w-[80%] lg:w-[50%] flex-wrap justify-between items-center mr-6">
+            <nav className="flex w-[80%] lg:w-[50%] flex-col md:flex-row flex-wrap justify-between items-center mr-6 gap-2">
                 {
                     sections.map((section, index) => {
                         return (
