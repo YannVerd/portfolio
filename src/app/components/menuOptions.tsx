@@ -8,6 +8,7 @@ interface IOptionsMenu {
     name: string,
     img: string,
     imgWhite: string,
+    link: string,
 }
 
 
@@ -22,12 +23,11 @@ export default function MenuOptions(props: IOptionsMenu){
     /* manage dynamic css with inline style: use 'index' for setup transisiton delay and use the name's props property for select colors variables */
     return (
         
-        <button
+        <a href={props.link} target="_blank"><button
             key={props.index}  
             style={{ transitionDelay: `${props.index * 100}ms`, backgroundColor:`${ isHover ? `var(--${props.name.toLowerCase()}Light)`: `var(--${props.name.toLowerCase()})`} ` }}
             onMouseEnter={handleBoutonHoverMenu}
             onMouseLeave={handleBoutonHoverMenu}
-            
             className={
                 `hover:bg-gray-400 hover:text-white  p-4 flex justify-around items-center w-48 rounded-xl shadow-xl
                     hover:shadow-inner hover:translate-x-44
@@ -35,6 +35,6 @@ export default function MenuOptions(props: IOptionsMenu){
             } 
             ><p>{props.name}</p >{ isHover ? 
             <Image src={props.imgWhite} width={50} height={50} alt={props.name}/>
-            :<Image src={props.img} width={50} height={50} alt={props.name}/>}</button>
+            :<Image src={props.img} width={50} height={50} alt={props.name}/>}</button></a>
     );
 }

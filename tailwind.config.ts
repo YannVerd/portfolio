@@ -11,6 +11,7 @@ const config: Config = {
     extend: {
       colors: {
        secondary: '#048b9a',
+       secondaryLight: '#bbd7dc'
       },
       keyframes: {
         blink: {
@@ -21,10 +22,20 @@ const config: Config = {
           '0%, 100%': { boxShadow: '0 0 10px 2px rgba(4, 139, 154, 0.8)' }, // 
           '50%': { boxShadow: '0 0 20px 8px rgba(4, 139, 154, 1)' }, // more lightning in middle
         },
+        typewriter: {
+          '0%': { width: '0%' }, 
+          '100%': { width: '100%' },
+        },
+        cursor: {
+          '0%, 100%': { borderColor: 'transparent' }, 
+          '50%': { borderColor: 'black' }, 
+        },
       },
       animation: {
         blink: 'blink 3s infinite', 
-        glowBlue: 'glowBlue 1.5s infinite',  
+        glowBlue: 'glowBlue 1.5s infinite',
+        typewriter: 'typewriter 4s steps(30) 1s 1 normal both',
+        cursor: 'blink 1s steps(2, start) infinite',
       },
     },
   },

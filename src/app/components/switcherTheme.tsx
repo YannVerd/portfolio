@@ -14,7 +14,7 @@ export default function SwitcherTheme (){
   return (
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
-        className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded-md"
+        className="bg-secondary hover:bg-secondaryLight text-white font-bold py-2 px-4 rounded"
       >
         {isDarkMode ? 'Mode Dark' : 'Mode Light'}
       </button>
