@@ -12,7 +12,7 @@ export default function Project(props: IProject){
                 <Image src={`/projects/${props.name.toLowerCase()}.png`} width={300} height={200} alt={`Image of ${props.name} project`} className="object-cover rounded-lg m-4 shadow-lg" />
 
             
-            <div className="flex flex-col justify-around">
+            <div className="flex flex-col justify-between">
                 <div className="flex justify-stretch items-center">
                     <h4 className="text-2xl font-semibold mr-2">{`Projet ${props.name}`}</h4>
                     <a href={props.link} target="_blank"><Image src={"/github-white-50.png"} width={40} height={40} alt="github picture" className="bg-white rounded-full"/></a>

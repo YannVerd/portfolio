@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import MenuOptions from "./menuOptions";
+import { IHeader } from "./header";
 
-export default function BurgerMenu(){
+
+
+export default function BurgerMenu(props: IHeader){
     const links = [{name: "GitHub", img:"/github-50.png", imgWhite:"/github-white-50.png", link: "#"}, {name: "LinkedIn", img:"/linkedin-50.png",imgWhite:"/linkedin-white-50.png", link: "#"}, {name: "CV", img:"/cv-50.png", imgWhite:"/cv-white-50.png", link: "#"}]
     
     const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +42,7 @@ export default function BurgerMenu(){
             <div className="flex flex-col w-auto absolute top-40 -left-48 mt-1">
                 {links.map( (link, index) => {
                     return (
-                        <MenuOptions index={index} key={index} isOpen={isOpen} name={link.name} img={link.img} imgWhite={link.imgWhite} link={link.link}/>
+                        <MenuOptions index={index} key={index} isOpen={isOpen} name={link.name} img={link.img} imgWhite={link.imgWhite} link={link.link} hook={props.hook}/>
                         
                     );                    
                 })}
