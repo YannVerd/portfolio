@@ -33,7 +33,7 @@ export default function MenuOptions(props: IOptionsMenu){
                 onMouseEnter={handleBoutonHoverMenu}
                 onMouseLeave={handleBoutonHoverMenu}
                 className={
-                    `hover:bg-gray-400 hover:text-white bg-white dark:bg-gray-800 p-4 flex justify-around items-center w-48 rounded-xl shadow-xl border-2 border-secondary
+                    `hover:bg-gray-400 hover:text-white bg-white dark:bg-secondary p-4 flex justify-around items-center w-48 rounded-xl shadow-xl border-2 border-secondary dark:border-white
                         hover:shadow-inner hover:translate-x-44
                         transform transition-all duration-500 ${props.isOpen ? "translate-x-24": "-translate-x-0"}`
                 } 
