@@ -14,7 +14,7 @@ export default function Project(props: IProject){
             
             <div className="flex flex-col justify-between">
                 <div className="flex justify-stretch items-center">
-                    <h4 className="text-2xl font-semibold mr-2">{`Projet ${props.name}`}</h4>
+                    <h4 className="text-2xl font-semibold mr-2 text-secondary">{`Projet ${props.name}`}</h4>
                     <a href={props.link} target="_blank"><Image src={"/github-white-50.png"} width={40} height={40} alt="github picture" className="bg-white rounded-full"/></a>
                 </div>
                 <p>{props.description}</p>
