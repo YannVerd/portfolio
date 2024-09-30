@@ -46,16 +46,16 @@ export default function Home() {
       <main className="md:w-[95%] w-full flex flex-col justify-between items-center mt-24 mb-20">
         <CVModal isVisible={showCV} hook={(handlingModal)}/>
         <section id="presentationSection" className="flex w-full lg:w-[86%] flex-col lg:flex-row justify-between items-center mb-12">
-          <div className="flex flex-col justify-center items-center">
-            <h1 className="text-secondary font-bold text-4xl md:text-6xl  dark:text-white">Bienvenue sur mon Portfolio</h1>
-            <div className="flex items-center w-fit space-x-2" style={{ width: '62ch' }}>
-              <h3 className="text-2xl font-mono overflow-hidden whitespace-nowrap animate-typewriter">
+          <div className="flex flex-col flex-wrap md:flex-nowrap justify-center items-center">
+            <h1 className="text-secondary text-center font-bold text-4xl md:text-6xl  dark:text-white">Bienvenue sur mon Portfolio</h1>
+            <div className="flex items-center w-full space-x-2" >
+              <h3 className="text-xl text-center font-mono overflow-hidden whitespace-wrap md:whitespace-nowrap md:animate-typewriter">
                 Développeur full stack - <span className="text-secondary">Yann Verdier</span>
               </h3>
-              <span className="sm:animate-cursor border-r-4 border-secondary h-8"></span>
+              <span className="hidden md:block md:animate-cursor border-r-4 border-secondary h-8"></span>
             </div>
           </div>
-          <Image src={'/photo_cv.jpg'} width={400} height={400} alt="profile image" className="rounded-full shadow-md dark:shadow-secondary"/>
+          <Image src={'/photo_cv.jpg'} width={400} height={400} priority alt="profile image" className="rounded-full shadow-md dark:shadow-secondary"/>
         </section>
         <section id="skillsSection" className="flex flex-col w-full md:w-[80%] h-auto justify-around items-center mb-12">
           <h1 className="text-secondary font-semibold text-4xl md:text-6xl mb-12"> Mes Compétences</h1>

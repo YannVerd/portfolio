@@ -20,6 +20,10 @@
   }
 }
 
+html{
+  width: 100%;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
