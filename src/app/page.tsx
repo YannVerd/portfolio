@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import {useState} from "react";
 import Header from "@/app/components/header";
 import Skill from "./components/skill";
 import Project from "./components/project";
@@ -7,19 +7,27 @@ import LegalNotices from "./components/legalNotices";
 import Image from "next/image";
 import CVModal from "./components/cvModal";
 import {skills, projects} from './utils/constants.'
+import GameWindow from "@/game/gameWindow";
 
 export default function Home() {
-  const [legalNotices, setLegalNotices] = React.useState(false);
-  const [showCV, setShowCV] = React.useState(false);
+  const [legalNotices, setLegalNotices] = useState(false);
+  const [showCV, setShowCV] = useState(false);
+  const [launchGame, setLaunchGame]= useState(false);
 
   const handlingModal = (type: string) => {
-    if(type == 'CV'){
-      setShowCV(!showCV);
-      showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
-    }else{
-      setLegalNotices(!legalNotices);
-      legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
-
+    switch(type){
+      case 'CV':
+        setShowCV(!showCV);
+        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fixe the background
+        break;
+      case 'legalNotices':
+        setLegalNotices(!legalNotices);
+        legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
+        break;
+      case 'game':
+        setLaunchGame(!launchGame);
+        launchGame ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
+        break;
     }
     
   }
@@ -79,9 +87,11 @@ export default function Home() {
             }
           </div>
         </section>
-        <footer>
+        <footer className="flex items-center">
           <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
+          <GameWindow isVisible={launchGame} hook={handlingModal} />
           <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
+          <Image src="/game/virus.png" width={24} height={24} alt="easterEgg" className="ml-4 hover:scale-50" onClick={()=>{handlingModal('game')}}/>
         </footer> 
       </main>  
     </>
