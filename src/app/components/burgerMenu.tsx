@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState} from "react";
 import MenuOptions from "./menuOptions";
 import { IHeader } from "./header";
 

@@ -1,6 +1,5 @@
 import React from "react";
 import MenuOptions from "./menuOptions";
-import MenuBurger from "./burgerMenu";
 import BurgerMenu from "./burgerMenu";
 import SwitcherTheme from "./switcherTheme";
 
