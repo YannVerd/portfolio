@@ -55,7 +55,7 @@ export default function Home() {
               <span className="hidden md:block md:animate-cursor border-r-4 border-secondary h-8"></span>
             </div>
           </div>
-          <Image src={'/photo_cv.jpg'} width={400} height={400} priority alt="profile image" className="rounded-full shadow-md dark:shadow-secondary"/>
+          <Image src={'/photo_cv.jpg'} width={400} height={400} priority alt="profile image" className="rounded-full w-52 md:w-72 lg:w-96 shadow-md dark:shadow-secondary"/>
         </section>
         <section id="skillsSection" className="flex flex-col w-full md:w-[80%] h-auto justify-around items-center mb-12">
           <h1 className="text-secondary font-semibold text-4xl md:text-6xl mb-12"> Mes Compétences</h1>

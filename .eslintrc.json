@@ -1,6 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
-  "rules":{
-    "no-unused-expressions": ["warning", {"allowShortCiruit": true, "allowTernary": true}]
+  "rules": {
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": "warn"
   }
 }
