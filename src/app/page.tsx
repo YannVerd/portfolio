@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import {useState} from "react";
 import Header from "@/app/components/header";
 import Skill from "./components/skill";
 import ProjectCard from "./components/projectCard";
@@ -7,20 +7,26 @@ import LegalNotices from "./components/legalNotices";
 import Image from "next/image";
 import CVModal from "./components/cvModal";
 import {skills, projects} from './utils/constants.'
+import GameWindow from "@/game/gameWindow";
 
 export default function Home() {
-  const [legalNotices, setLegalNotices] = React.useState(false);
-  const [showCV, setShowCV] = React.useState(false);
+  const [legalNotices, setLegalNotices] = useState(false);
+  const [showCV, setShowCV] = useState(false);
+  const [launchGame, setLaunchGame]= useState(false);
 
   const handlingModal = (type: string) => {
     switch(type){
       case 'CV':
         setShowCV(!showCV);
-        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fix the background
+        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fixe the background
         break;
       case 'legalNotices':
         setLegalNotices(!legalNotices);
         legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
+        break;
+      case 'game':
+        setLaunchGame(!launchGame);
+        launchGame ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
         break;
     }
   }
