@@ -29,11 +29,11 @@ export default function MenuOptions(props: IOptionsMenu){
             <button
                 onClick={() => { props.name === 'CV' ? props.hook('CV'): window.open(props.link) }}
                 key={props.index}  
-                style={{ transitionDelay: `${props.index * 100}ms`, backgroundColor:`${ isHover ? `var(--${props.name.toLowerCase()}Light)`: `var(--${props.name.toLowerCase()})`} ` }}
+                style={{ transitionDelay: `${props.index * 100}ms`, }}
                 onMouseEnter={handleBoutonHoverMenu}
                 onMouseLeave={handleBoutonHoverMenu}
                 className={
-                    `hover:bg-gray-400 hover:text-white  p-4 flex justify-around items-center w-48 rounded-xl shadow-xl
+                    `hover:bg-gray-400 hover:text-white  p-4 flex justify-around items-center w-48 rounded-xl shadow-xl border-2 border-secondary
                         hover:shadow-inner hover:translate-x-44
                         transform transition-all duration-500 ${props.isOpen ? "translate-x-24": "-translate-x-0"}`
                 } 
