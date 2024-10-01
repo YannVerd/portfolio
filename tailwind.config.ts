@@ -14,6 +14,10 @@ const config: Config = {
        secondaryLight: '#bbd7dc'
       },
       keyframes: {
+        virus: {
+          '0%, 100%': {scale: '0.5'},
+          '50%': {scale: '1.5'}
+        },
         blink: {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.5' },
@@ -48,7 +52,8 @@ const config: Config = {
         glowBlue: 'glowBlue 1.5s infinite',
         typewriter: 'typewriter 5s steps(37, end) 1s infinite ',
         cursor: 'blink 1s steps(2, start) infinite',
-        bounce: 'bounce 1s infinite'
+        bounce: 'bounce 1s infinite',
+        virus: 'virus 3s infinite'
       },
     },
   },
