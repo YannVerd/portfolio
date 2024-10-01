@@ -91,7 +91,7 @@ export default function Home() {
           <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
           <GameWindow isVisible={launchGame} hook={handlingModal} />
           <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
-          <Image src="/game/virus.png" width={24} height={24} alt="easterEgg" className="ml-4 hover:scale-50" onClick={()=>{handlingModal('game')}}/>
+          <Image src="/game/virus.png" width={24} height={24} alt="easterEgg" className="ml-4 animate-virus hover:animate-cursor" onClick={()=>{handlingModal('game')}}/>
         </footer> 
       </main>  
     </>
