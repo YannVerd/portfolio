@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function SwitcherTheme (){
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -14,9 +15,8 @@ export default function SwitcherTheme (){
   return (
       <button
         onClick={() => setIsDarkMode(!isDarkMode)}
-        className="bg-secondary hover:bg-secondaryLight text-white font-bold py-2 px-4 rounded"
       >
-        {isDarkMode ? 'Mode Dark' : 'Mode Light'}
+        <Image src={isDarkMode ? '/moon.png' : '/sun.png'} alt='switcher them' width={24} height={24} className='dark:rounded-full dark:bg-white dark:p-1'/>
       </button>
   );
 };
