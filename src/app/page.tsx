@@ -18,7 +18,7 @@ export default function Home() {
     switch(type){
       case 'CV':
         setShowCV(!showCV);
-        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fixe the background
+        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fix the background
         break;
       case 'legalNotices':
         setLegalNotices(!legalNotices);
