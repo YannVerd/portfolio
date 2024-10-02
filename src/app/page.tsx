@@ -13,15 +13,16 @@ export default function Home() {
   const [showCV, setShowCV] = React.useState(false);
 
   const handlingModal = (type: string) => {
-    if(type == 'CV'){
-      setShowCV(!showCV);
-      showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
-    }else{
-      setLegalNotices(!legalNotices);
-      legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
-
+    switch(type){
+      case 'CV':
+        setShowCV(!showCV);
+        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fix the background
+        break;
+      case 'legalNotices':
+        setLegalNotices(!legalNotices);
+        legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
+        break;
     }
-    
   }
  
 

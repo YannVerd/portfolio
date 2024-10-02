@@ -37,7 +37,7 @@ export default function Header(props: IHeader){
                 {
                     sections.map((section, index) => {
                         return (
-                            <a key={index} className="hover:text-secondary hover:decoration-secondary hover:animate-blink underline font-bold text-2xl" href={`#${section.id}`}>{section.name}</a>
+                            <a key={index} className="hover:text-secondary hover:decoration-secondary hover:animate-blink hover:underline font-bold text-2xl" href={`#${section.id}`}>{section.name}</a>
                         );
                     })                  
                 }
