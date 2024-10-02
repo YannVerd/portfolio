@@ -13,15 +13,16 @@ export default function Home() {
   const [showCV, setShowCV] = React.useState(false);
 
   const handlingModal = (type: string) => {
-    if(type == 'CV'){
-      setShowCV(!showCV);
-      showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
-    }else{
-      setLegalNotices(!legalNotices);
-      legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
-
+    switch(type){
+      case 'CV':
+        setShowCV(!showCV);
+        showCV ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden"; // fix the background
+        break;
+      case 'legalNotices':
+        setLegalNotices(!legalNotices);
+        legalNotices ? document.documentElement.style.overflow = "" : document.documentElement.style.overflow = "hidden";
+        break;
     }
-    
   }
  
 
@@ -79,11 +80,12 @@ export default function Home() {
             }
           </div>
         </section>
-        <footer>
-          <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
-          <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
-        </footer> 
       </main>  
+      <footer>
+        <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
+        <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
+      </footer> 
+   
     </>
     
 
