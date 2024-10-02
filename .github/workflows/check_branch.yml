@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check if pull request is from dev
-        if: github.base_ref != 'dev'
+        if: github.event.pull_request.head.ref != 'dev'
         run: |
           echo "Pull requests to main must come from dev"
           exit 1
