@@ -80,11 +80,12 @@ export default function Home() {
             }
           </div>
         </section>
-        <footer>
-          <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
-          <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
-        </footer> 
       </main>  
+      <footer>
+        <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
+        <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
+      </footer> 
+   
     </>
     
 
