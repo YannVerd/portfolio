@@ -82,7 +82,7 @@ export default function Home() {
         </section>
         <a href="#presentationSection"><Image src="/arrowup.png" alt="Arrow Up" width={34} height={24} className="hover:animate-bounce"/></a>
       </main>  
-      <footer>
+      <footer className="flex items-center">
         <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
         <GameWindow isVisible={launchGame} hook={handlingModal} />
         <p className="text-xs">©2024 - création du site: Yann Verdier - <button onClick={() => handlingModal('legalNotices')}><a>mentions légales</a></button></p>
