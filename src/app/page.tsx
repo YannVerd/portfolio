@@ -6,6 +6,7 @@ import Project from "./components/project";
 import LegalNotices from "./components/legalNotices";
 import Image from "next/image";
 import CVModal from "./components/cvModal";
+import {skills, projects} from './utils/constants.'
 
 export default function Home() {
   const [legalNotices, setLegalNotices] = React.useState(false);
@@ -22,23 +23,7 @@ export default function Home() {
     }
     
   }
-  // skills's names match pictures's names
-   const skills = ['React','Expo', 'Nodejs', 'Mongoose', 'MongoDB', 'Flutter', 'MySQL', 'JavaScript', 'cpp'];
-   const projects = [
-    {
-      name: 'WitcherJDR', 
-      description: `Projet pour une feuille de Personnage automatique pour le jeu de role The witcher.
-                    Framework non possible car doit être utilisé hors ligne sur public non averti (Pas de commandes ou manipulation complexe).
-                    Server et base de donnée en serveur privé (physique local) uniquement pour sauvegarder les personnages.
-                    `,
-      link: "https://github.com/YannVerd/Witcher-CharacterSheet"
-    },
-    {
-      name: 'CPPFW',
-      description: `Il s'agit d'un framework réalisé en C++ pour créer des sites statiques en html/css `,
-      link: "https://github.com/YannVerd/CPPFW"
-    } 
-  ]
+ 
 
   return (
     <>
@@ -57,6 +42,18 @@ export default function Home() {
           </div>
           <Image src={'/photo_cv.jpg'} width={400} height={400} priority alt="profile image" className="rounded-full w-52 md:w-72 lg:w-96 shadow-md dark:shadow-secondary"/>
         </section>
+        <section id="skillsSection" className="flex flex-col w-full md:w-[80%] h-auto justify-around items-center mb-12">
+          <h1 className="text-secondary font-semibold text-4xl md:text-6xl mb-12"> A propos de moi</h1>
+          <div className="flex flex-wrap w-[70%] justify-between items-center gap-9">
+            <p className="text-xl">Titulaire du titre de développeur web depuis le 1er Juillet 2024, je suis à la recherche d'une première expérience professionnelle pour me spécialiser et 
+              parfaire mes connaissances. D'un naturel sociable, dynamique et curieux, je suis passionné par ce nouveau monde qui s'ouvre à moi.
+              Depuis l'obtention de mon diplôme, je n'ai de cesse de pratiquer pour progresser en effectuant des projets personnels que ce soit en Nextjs, c++ ou html/css/js.
+              N'hésitez pas à me contacter via les mentions légales ou mon CV.
+            </p>
+          </div>
+          
+        </section>
+
         <section id="skillsSection" className="flex flex-col w-full md:w-[80%] h-auto justify-around items-center mb-12">
           <h1 className="text-secondary font-semibold text-4xl md:text-6xl mb-12"> Mes Compétences</h1>
           <div className="flex flex-wrap w-[70%] justify-between items-center gap-9">
