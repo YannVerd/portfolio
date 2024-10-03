@@ -16,7 +16,7 @@ export default function Header(props: IHeader){
     
 
     return (
-        <header className="p-2 w-full h-auto pb-4 flex justify-between sticky border-b-2 border-cv hover:animate-glowBlue">
+        <header className="p-2 w-full h-auto pb-4 flex justify-between sticky ">
             <div>
                 {/* responsive menu burger: display or not the burger menu depends on screen size
                     When the screen size is too small, we hide the menu options and display the burger menu. 
