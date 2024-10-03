@@ -2,17 +2,13 @@ import React from "react";
 import MenuOptions from "./menuOptions";
 import BurgerMenu from "./burgerMenu";
 import SwitcherTheme from "./switcherTheme";
+import { links, sections } from "../utils/constants.";
 
 export interface IHeader{
     hook(type: string): void,
 }
 
 export default function Header(props: IHeader){
-
-    const links = [{name: "GitHub", img:"/github-50.png", imgWhite:"/github-white-50.png", link: "https://github.com/YannVerd"}, {name: "LinkedIn", img:"/linkedin-50.png",imgWhite:"/linkedin-white-50.png", link: "https://www.linkedin.com/in/yann-verdier-a7b457271/"}, {name: "CV", img:"/cv-50.png", imgWhite:"/cv-white-50.png", link: "#"}]
-    const sections = [{name: "Présentation" , id: "presentationSection"}, {name: "Compétences" , id: "skillsSection"}, {name: "Projets" , id: "projectsSection"} ]
-
-
     
 
     return (
@@ -33,7 +29,7 @@ export default function Header(props: IHeader){
                     
                 </div>
             </div>
-            <nav className="flex w-[80%] lg:w-[50%] flex-col md:flex-row flex-wrap justify-between items-center mr-6 gap-2">
+            <nav className="flex w-[80%] lg:w-[50%] flex-col md:flex-row flex-wrap justify-end items-center mr-6 gap-2 lg:gap-8">
                 {
                     sections.map((section, index) => {
                         return (
@@ -42,10 +38,7 @@ export default function Header(props: IHeader){
                     })                  
                 }
                 <SwitcherTheme />
-            </nav>
-           
-                 
-            
+            </nav>  
         </header>
     );
 }
