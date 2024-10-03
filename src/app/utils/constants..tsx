@@ -1,5 +1,5 @@
 // skills's names match pictures's names
-export const skills = ['React','Expo', 'Nodejs', 'Mongoose', 'MongoDB', 'Flutter', 'MySQL', 'JavaScript', 'cpp'];
+export const skills = ['React','Expo', 'Nodejs', 'Mongoose', 'MongoDB', 'Flutter', 'MySQL', 'JavaScript', 'cpp', 'DotNet'];
 export const projects = [
     {
         name: 'WitcherJDR', 
@@ -13,12 +13,18 @@ export const projects = [
         name: 'CPPFW',
         description: `Il s'agit d'un framework réalisé en C++ pour créer des sites statiques en html/css `,
         link: "https://github.com/YannVerd/CPPFW"
-        },
+    },
     {
         name: "pizza_app",
         description:"Projet d'école pour une application de livraison de pizza en flutter",
         link:'https://github.com/YannVerd/pizza_app'
-    } 
+    },
+    {
+        name: "Conectim",
+        description: "Mon stage dans la Start-up éponyme qui m'a permit de développer, entre autres, une messagerie dans un évènement et la programmation d'évènements récurrents",
+        link: "https://conectim.fr/",
+    }
+
 ]
 export const links = [
     {name: "GitHub", img:"/github-50.png", imgWhite:"/github-white-50.png", link: "https://github.com/YannVerd"}, 
