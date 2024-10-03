@@ -2,7 +2,7 @@
 import React from "react";
 import Header from "@/app/components/header";
 import Skill from "./components/skill";
-import Project from "./components/project";
+import ProjectCard from "./components/projectCard";
 import LegalNotices from "./components/legalNotices";
 import Image from "next/image";
 import CVModal from "./components/cvModal";
@@ -74,7 +74,7 @@ export default function Home() {
             {
               projects.map((project, index) => {
                 return (
-                  <Project name={project.name} description={project.description} link={project.link} key={index}/>
+                  <ProjectCard name={project.name} description={project.description} link={project.link} key={index}/>
                 );
               })
             }
