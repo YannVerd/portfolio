@@ -7,7 +7,7 @@ import LegalNotices from "./components/legalNotices";
 import Image from "next/image";
 import CVModal from "./components/cvModal";
 import {skills, projects} from './utils/constants.'
-import GameWindow from "@/game/gameWindow";
+import GameWindow from "@/app/game/gameWindow";
 
 export default function Home() {
   const [legalNotices, setLegalNotices] = useState(false);
