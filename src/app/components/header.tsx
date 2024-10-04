@@ -29,7 +29,7 @@ export default function Header(props: IHeader){
                     
                 </div>
             </div>
-            <nav className="hidden md:flex w-[80%] lg:w-[50%] flex-col md:flex-row flex-wrap justify-end items-center mr-6  lg:gap-28">
+            <nav className="hidden md:flex w-[80%] lg:w-[50%] flex-col md:flex-row flex-wrap justify-end items-center mr-6 md:gap-28">
                 {
                     sections.map((section, index) => {
                         return (

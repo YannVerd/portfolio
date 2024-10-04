@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <>
       <Header hook={handlingModal}/>
-      <main className="md:w-[95%] w-full flex flex-col justify-between items-center mt-24 mb-20">
+      <main className="md:w-[95%] w-full flex flex-col justify-between items-center mt-[3rem] mb-20">
         <CVModal isVisible={showCV} hook={(handlingModal)}/>
         <section id="presentationSection" className="flex w-full lg:w-[86%] flex-col lg:flex-row justify-between items-center mb-12">
           <div className="flex flex-col flex-wrap md:flex-nowrap justify-center items-center lg:items-start">
@@ -40,9 +40,9 @@ export default function Home() {
               </h3>
               <span className="hidden md:block md:animate-cursor border-r-4 border-secondary h-8"></span>
             </div>
-            <p className="w-8/12 lg:self-start mt-4 mb-4 lg:mb-0">Titulaire du titre de développeur web depuis le 1er Juillet 2024, je suis à la recherche d'une première expérience professionnelle pour me spécialiser et 
-              parfaire mes connaissances. D'un naturel sociable, dynamique et curieux, je suis passionné par ce nouveau monde qui s'ouvre à moi.
-              Depuis l'obtention de mon diplôme, je n'ai de cesse de pratiquer pour progresser en effectuant des projets personnels que ce soit en Nextjs, c++ ou html/css/js.
+            <p className="w-8/12 lg:self-start mt-4 mb-4 lg:mb-0 text-justify">Titulaire du titre de développeur web depuis le 1er Juillet 2024, je suis à la recherche d'une première expérience professionnelle pour me spécialiser et 
+              parfaire mes connaissances. D'un naturel sociable, dynamique et curieux, je suis passionné par ce nouveau monde qui s'ouvre à moi.</p>
+            <p className="w-8/12 lg:self-start mt-1 mb-4 lg:mb-0 text-justify">  Depuis l'obtention de mon diplôme, je n'ai de cesse de pratiquer pour progresser en effectuant des projets personnels que ce soit en Nextjs, c++ ou html/css/js.
               N'hésitez pas à me contacter via les mentions légales ou mon CV.
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function Home() {
         </section>
 
         <section id="skillsSection" className="flex flex-col w-full md:w-[80%] h-auto justify-around items-center mb-12">
-          <h1 className="text-secondary font-semibold text-4xl md:text-6xl mb-12"> Mes Compétences</h1>
+          <h1 className="text-secondary text-center font-semibold text-4xl md:text-6xl mb-12"> Mes Compétences</h1>
           <div className="flex flex-wrap w-[70%] justify-between items-center gap-9">
             {
               skills.map((skill, index) => {
