@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <>
       <Header hook={handlingModal}/>
-      <main className="md:w-[95%] w-full flex flex-col justify-between items-center mt-24 mb-20">
+      <main className="md:w-[95%] w-full flex flex-col justify-between items-center mt-[3rem] mb-20">
         <CVModal isVisible={showCV} hook={(handlingModal)}/>
         <section id="presentationSection" className="flex w-full lg:w-[86%] flex-col lg:flex-row justify-between items-center mb-12">
           <div className="flex flex-col flex-wrap md:flex-nowrap justify-center items-center lg:items-start">
