@@ -20,11 +20,12 @@ export default function GameWindow(props: IModal){
     const [playerX, setPlayerX]= useState(0);
     const [virusList, setVirusList]= useState<Array<IVirus>>([]);
     const virusSpeed= 10;
-    const gameSpeed = 500;
+    const gameSpeed = 100;
+   
 
 
     
-    const virusHitBox = 24;
+    const virusHitBox = 30;
     const playerHitBox = 25
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -56,23 +57,22 @@ export default function GameWindow(props: IModal){
 
     useEffect(()=>{
         window.addEventListener('keydown', handleKeyDown);
-        if(props.isVisible){
-            if(gameWin.current){
-                const { width, height } = gameWin.current.getBoundingClientRect();
-                setGameSizes((win) => {
-                    win.height = height;
-                    win.width = width;
-                    return win;
-                });
-                setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
-                generateVirus(); // generate Virus each 4 seconds
-                setInterval(()=>{movementsVirus()}, gameSpeed); // mouve virus each seconds
-                
-                
-                
-        }
+        
+        if(gameWin.current && props.isVisible){
+            const { width, height } = gameWin.current.getBoundingClientRect();
+            setGameSizes((win) => {
+                win.height = height;
+                win.width = width;
+                return win;
+            });
+            setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
+            generateVirus(); // generate Virus each 4 seconds
+            setInterval(()=>{movementsVirus()}, gameSpeed); // mouve virus each seconds
+            
+            
+            
         }else{
-            window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('keydown', handleKeyDown);
         }
         
     }, [props.isVisible]);
@@ -102,24 +102,19 @@ export default function GameWindow(props: IModal){
     }
 
     const movementsVirus = () => {
-        setVirusList((list)=>{
-            list.forEach((virus, index)=>{            
-                if(virus.y + virusSpeed < gameSizes.height - virusHitBox){ // if virus touch floor, remove him from the array
-                    virus.y += virusSpeed;
-                    setFromArray(index, virus)
-                    
-                }else{
-                    removeFromArray(index)
-                }
-                             
-            })
-            console.log(list)
-            return list;      
-        })
+        setVirusList((prevList) =>
+            prevList
+                .map((virus) => ({
+                    ...virus,
+                    y: virus.y + virusSpeed,
+                }))
+                .filter((virus) => virus.y < gameSizes.height - virusHitBox) // remove virus out of window
+        );
+        console.log(virusList)
     }
 
     return (
-        <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50" style={{ display: props.isVisible ? 'flex' : 'none'}}>
+        <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
             <div className="flex justify-between items-center w-full bg-blue-700 border-2 border-gray-400">
                 <h3 className="text-xl ml-">Virus attack</h3>
                 <button className="bg-gray-400 hover:bg-gray-200 text-white font-bold py-2 px-4 border my-1 mr-1" onClick={()=> { props.hook('game')}}>X</button>
