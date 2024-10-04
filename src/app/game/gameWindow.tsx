@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import { IModal } from "@/app/components/legalNotices";
 import Image from "next/image";
 import VirusElement from "./virus";
+import { clearInterval } from "timers";
 
 export interface IVirus{
     x: number,
@@ -18,7 +19,12 @@ export default function GameWindow(props: IModal){
     const [gameSizes, setGameSizes] = useState<IGameWin>({ width: 0, height: 0 });
     const [playerX, setPlayerX]= useState(0);
     const [virusList, setVirusList]= useState<Array<IVirus>>([]);
+    const virusSpeed= 10;
+    const gameSpeed = 500;
 
+
+    
+    const virusHitBox = 24;
     const playerHitBox = 25
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -50,7 +56,8 @@ export default function GameWindow(props: IModal){
 
     useEffect(()=>{
         window.addEventListener('keydown', handleKeyDown);
-        if(gameWin.current){
+        if(props.isVisible){
+            if(gameWin.current){
                 const { width, height } = gameWin.current.getBoundingClientRect();
                 setGameSizes((win) => {
                     win.height = height;
@@ -58,21 +65,25 @@ export default function GameWindow(props: IModal){
                     return win;
                 });
                 setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
-                setInterval(() => {generateVirus()}, 4000);
+                generateVirus(); // generate Virus each 4 seconds
+                setInterval(()=>{movementsVirus()}, gameSpeed); // mouve virus each seconds
+                
                 
                 
         }
-        if(!props.isVisible){
+        }else{
             window.removeEventListener('keydown', handleKeyDown);
         }
+        
     }, [props.isVisible]);
+
 
     const generateVirus = () => {
         let virus = {
             x: Math.random()* (gameSizes.width - 24) + 24,
             y: 0
         }
-        setVirusList(list=>[...list, virus])
+        virusList.push(virus);
     }
 
     const setFromArray = (index: number, virus: IVirus) => {
@@ -90,6 +101,23 @@ export default function GameWindow(props: IModal){
         })
     }
 
+    const movementsVirus = () => {
+        setVirusList((list)=>{
+            list.forEach((virus, index)=>{            
+                if(virus.y + virusSpeed < gameSizes.height - virusHitBox){ // if virus touch floor, remove him from the array
+                    virus.y += virusSpeed;
+                    setFromArray(index, virus)
+                    
+                }else{
+                    removeFromArray(index)
+                }
+                             
+            })
+            console.log(list)
+            return list;      
+        })
+    }
+
     return (
         <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50" style={{ display: props.isVisible ? 'flex' : 'none'}}>
             <div className="flex justify-between items-center w-full bg-blue-700 border-2 border-gray-400">
@@ -100,7 +128,7 @@ export default function GameWindow(props: IModal){
                     {
                         virusList.map((virus, index)=>{
                             return (
-                                <VirusElement key={index} index={index} properties={virus} win={gameSizes} setFromArray={setFromArray} removeFromArray={removeFromArray}/>
+                                <Image src="/game/virus.png" key={index} width={50} height={50} alt="easterEgg" className="absolute left-10" style={{left:`${virus.x}px`, top: `${virus.y}px`}}/>
                             );
                         })
                     }
