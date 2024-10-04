@@ -33,7 +33,7 @@ export default function Home() {
         <CVModal isVisible={showCV} hook={(handlingModal)}/>
         <section id="presentationSection" className="flex w-full lg:w-[86%] flex-col lg:flex-row justify-between items-center mb-12">
           <div className="flex flex-col flex-wrap md:flex-nowrap justify-center items-center lg:items-start">
-            <h1 className="text-secondary font-bold text-4xl md:text-6xl  dark:text-white">Bienvenue sur mon Portfolio</h1>
+            <h1 className="text-secondary text-center lg:text-start font-bold text-4xl md:text-6xl  dark:text-white">Bienvenue sur mon Portfolio</h1>
             <div className="flex justify-center lg:justify-start items-center w-full space-x-2" >
               <h3 className="text-xl text-center font-mono overflow-hidden whitespace-wrap  md:whitespace-nowrap md:animate-typewriter">
                 Développeur full stack - <span className="text-secondary">Yann Verdier</span>
