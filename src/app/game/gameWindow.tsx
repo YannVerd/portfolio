@@ -20,7 +20,7 @@ export default function GameWindow(props: IModal){
     const [playerX, setPlayerX]= useState(0);
     const [virusList, setVirusList]= useState<Array<IVirus>>([]);
     const virusSpeed= 10;
-    const gameSpeed = 100;
+    const gameSpeed = 500;
    
 
 
@@ -66,7 +66,7 @@ export default function GameWindow(props: IModal){
                 return win;
             });
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
-            generateVirus(); // generate Virus each 4 seconds
+            setInterval(()=>{generateVirus()}, 4000); // generate Virus each 4 seconds
             setInterval(()=>{movementsVirus()}, gameSpeed); // mouve virus each seconds
             
             
@@ -79,27 +79,26 @@ export default function GameWindow(props: IModal){
 
 
     const generateVirus = () => {
-        let virus = {
-            x: Math.random()* (gameSizes.width - 24) + 24,
-            y: 0
-        }
-        virusList.push(virus);
+        setVirusList((prevList) => [
+            ...prevList,
+            { x: Math.random() * (gameSizes.width - virusHitBox), y: 0 },
+        ]);
     }
 
-    const setFromArray = (index: number, virus: IVirus) => {
-        setVirusList(list => {
-            list[index]= virus;
-            return list;
-        })
+    // const setFromArray = (index: number, virus: IVirus) => {
+    //     setVirusList(list => {
+    //         list[index]= virus;
+    //         return list;
+    //     })
         
-    }
+    // }
 
-    const removeFromArray = (index: number) => {
-        setVirusList( list =>{
-            list.splice(index, 1);
-            return list;
-        })
-    }
+    // const removeFromArray = (index: number) => {
+    //     setVirusList( list =>{
+    //         list.splice(index, 1);
+    //         return list;
+    //     })
+    // }
 
     const movementsVirus = () => {
         setVirusList((prevList) =>
