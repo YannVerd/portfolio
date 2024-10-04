@@ -1,8 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import { IModal } from "@/app/components/legalNotices";
 import Image from "next/image";
-import VirusElement from "./virus";
-import { clearInterval } from "timers";
+
 
 export interface IVirus{
     x: number,
@@ -14,35 +13,38 @@ export interface IGameWin{
     height: number
 }
 
+interface IShoot{
+    x: number,
+    y: number,
+}
+
 export default function GameWindow(props: IModal){
     const gameWin = useRef<HTMLDivElement>(null);
     const [gameSizes, setGameSizes] = useState<IGameWin>({ width: 0, height: 0 });
     const [playerX, setPlayerX]= useState(0);
     const [virusList, setVirusList]= useState<Array<IVirus>>([]);
+    const [shootsList, setShootList]= useState<Array<IShoot>>([])
     const virusSpeed= 10;
+    const playerSpeed= 10;
     const gameSpeed = 500;
-   
-
-
     
     const virusHitBox = 30;
-    const playerHitBox = 25
+    const playerHitBox = 25;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-        switch (e.key) {
-   
+        switch (e.code) {      
           case 'ArrowLeft':
             setPlayerX((value) =>{
-                if(value-10 > 0 - playerHitBox) {
-                    return value -10; 
+                if(value-playerSpeed > 0 - playerHitBox) {
+                    return value -playerSpeed; 
                 }
                 return value
             } );
             break;
           case 'ArrowRight':
             setPlayerX((value) => {
-                if((value+10)  < gameSizes.width - playerHitBox ) {
-                    return value + 10;
+                if((value+playerSpeed)  < gameSizes.width - playerHitBox ) {
+                    return value + playerSpeed;
                 }
                 return value;
             });
@@ -109,7 +111,6 @@ export default function GameWindow(props: IModal){
                 }))
                 .filter((virus) => virus.y < gameSizes.height - virusHitBox) // remove virus out of window
         );
-        console.log(virusList)
     }
 
     return (
