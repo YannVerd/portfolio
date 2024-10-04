@@ -32,12 +32,23 @@ const config: Config = {
           '0%, 100%': { borderColor: 'transparent' }, 
           '50%': { borderColor: '#048b9a' }, 
         },
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+            animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)',
+          },
+          '50%': {
+            transform: 'translateY(-25%)',
+            animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
+          }
+        },
       },
       animation: {
         blink: 'blink 3s infinite', 
         glowBlue: 'glowBlue 1.5s infinite',
         typewriter: 'typewriter 5s steps(37, end) 1s infinite ',
         cursor: 'blink 1s steps(2, start) infinite',
+        bounce: 'bounce 1s infinite'
       },
     },
   },
