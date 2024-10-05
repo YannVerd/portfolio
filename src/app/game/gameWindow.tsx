@@ -4,19 +4,24 @@ import Image from "next/image";
 import { gameObjectType } from "../utils/constants.";
 
 
-export interface IGameObject{
+interface IGameObject{
+    id: number,
     x: number,
     y: number,
     width: number,
-    height: number
+    height: number,
+    upcomingCollision: boolean,
 }
 
-export interface IGameWin{
+interface IGameWin{ // Game Window (div)
     width: number,
     height: number
 }
 
-
+interface IObjectCollision{
+    virus: IGameObject,
+    shoot: IGameObject
+}
 
 export default function GameWindow(props: IModal){
     const gameWin = useRef<HTMLDivElement>(null);
@@ -24,6 +29,8 @@ export default function GameWindow(props: IModal){
     const [playerX, setPlayerX]= useState(0);
     const [virusList, setVirusList]= useState<Array<IGameObject>>([]);
     const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
+    const [currentId, setCurrentId] = useState(0);
+    const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
     let playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of 
 
     // game variables
@@ -32,27 +39,26 @@ export default function GameWindow(props: IModal){
     let playerSpeed= 10;
     let gameSpeed = 500;
     
-
     // constants physics
-    const playerHitBox = 48;
+    const playerWidth = 48;
+    const playerHeight = 25;
     const virusHitBox = 30;
 
-
     // intervals
-    const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsVirus?: NodeJS.Timeout; movementsShoots?: NodeJS.Timeout }>({});
+    const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsObjects?: NodeJS.Timeout }>({});
 
     const handleKeyDown = (e: KeyboardEvent) => {
         switch (e.code) {      
             case "ArrowLeft":
                 setPlayerX((value) => {
-                    const newX = value - playerSpeed > 0 - playerHitBox ? value - playerSpeed : value;
+                    const newX = value - playerSpeed > 0 - playerWidth? value - playerSpeed : value;
                     playerXRef.current = newX; // update ref
                     return newX;
                 });
                 break;
             case "ArrowRight":
                 setPlayerX((value) => {
-                    const newX = value + playerSpeed < gameSizes.width - playerHitBox ? value + playerSpeed : value;
+                    const newX = value + playerSpeed < gameSizes.width - playerWidth ? value + playerSpeed : value;
                     playerXRef.current = newX;
                     return newX;
                 });
@@ -76,19 +82,13 @@ export default function GameWindow(props: IModal){
             });
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
             intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, 4000); // generate Virus each 4 seconds
-            intervalsRef.current.movementsVirus = setInterval(()=>{movementsObject(gameObjectType.virus)}, gameSpeed); // move virus
-            intervalsRef.current.movementsShoots = setInterval(()=>{movementsObject(gameObjectType.shoot)}, gameSpeed) // move shoot
-            
-            
-            
+            intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSpeed); // move virus          
         }
         return () => { // remove intervals when unmount or invisible
             window.removeEventListener("keydown", handleKeyDown);
             clearInterval(intervalsRef.current.generateVirus);
-            clearInterval(intervalsRef.current.movementsVirus);
-            clearInterval(intervalsRef.current.movementsShoots);
-        };
-        
+            clearInterval(intervalsRef.current.movementsObjects);
+        }; 
     }, [props.isVisible]);
 
 
@@ -97,50 +97,87 @@ export default function GameWindow(props: IModal){
             case gameObjectType.virus:
                 setVirusList((prevList) => [
                     ...prevList,
-                    { x: Math.random() * (gameSizes.width - virusHitBox), y: 0, width: virusHitBox, height: virusHitBox },
+                    { id: currentId, x: Math.random() * (gameSizes.width - virusHitBox), y: 0, width: virusHitBox, height: virusHitBox, upcomingCollision: false },
                 ]);
+                setCurrentId((id)=>id++);
                 break;
+               
             case gameObjectType.shoot:
                 setShootsList((prevList) => [
                     ...prevList,
-                    { x: playerXRef.current + playerHitBox / 2, y: 30, width: 4, height: 16 },
+                    { id: currentId, x: playerXRef.current + playerWidth / 2, y: gameSizes.height - playerHeight , width: 4, height: 16, upcomingCollision: false },
                 ]);
+                setCurrentId((id)=>id++);
                 break;
-        }
-           
-    }
-    
-
-
-    const movementsObject = (type: string) => {
-        switch(type){
-            case gameObjectType.virus:
-                setVirusList((prevList) =>
-                    prevList
-                        .map((virus) => ({ // update virus coord
-                            ...virus,
-                            y: virus.y + virusSpeed, // depend on top
-                        }))
-                        .filter((virus) => virus.y < gameSizes.height - virus.height) // remove virus out of window
-                );
-            
-                break;
-            case gameObjectType.shoot:
-                setShootsList((prevList) =>
-                    prevList
-                        .map((shoot) => ({ // update shoots coord
-                            ...shoot,
-                            y: shoot.y + shootsSpeed, // depend on bottom
-                        }))
-                        .filter((shoot) => shoot.y > 0 + shoot.height) // remove virus out of window
-                );
-            break;
-        }
-        
+        } 
+        detectUpcomingCollisions();   
     }
 
-        
+    const movementsObject = () => {
 
+        setVirusList((prevList) =>
+            prevList
+                .map((virus) => ({ // update virus coord
+                    ...virus,
+                    y: virus.y + virusSpeed, // depend on top
+                }))
+                .filter((virus) => virus.y < gameSizes.height - virus.height) // remove virus out of window
+        );
+
+        setShootsList((prevList) =>
+            prevList
+                .map((shoot) => ({ // update shoots coord
+                    ...shoot,
+                    y: shoot.y - shootsSpeed, // depend on bottom
+                }))
+                .filter((shoot) => shoot.y > 0 + shoot.height) // remove virus out of window
+        );  
+        
+        detectCollisions();
+    }
+
+    /** when an object is created, we detect whether these new objects will collide with others. add this objects in the upcomingCollision array */
+    const detectUpcomingCollisions = () => {
+
+        virusList.forEach((virus) => {
+            shootsList.forEach((shoot) => {
+                if (
+                    virus.x < shoot.x + shoot.width &&
+                    virus.x + virus.width > shoot.x &&
+                    !shoot.upcomingCollision
+                  ) {
+                    setUpcomingCollisions((prevList)=>{
+                        let newList = [...prevList];
+                        shoot.upcomingCollision = true;
+                        virus.upcomingCollision = true;
+                        newList.push({virus: virus, shoot: shoot});
+                        return newList
+                    })
+                  }
+            })
+        });
+
+    }
+
+    /**this function detects the objects that will collide. And removes them from the list when they do. */
+    const detectCollisions = () => {
+        upcomingCollisions.forEach((collision, index) => {
+            if(collision.virus.y + collision.virus.height > collision.shoot.y ) {
+                setUpcomingCollisions((list => {
+                    list.splice(index, 1);
+                    return list;
+                }))
+                setVirusList((list)=>{
+                    list.filter( virus => virus.id !== collision.virus.id);
+                    return list;
+                })
+                setShootsList((list)=>{
+                    list.filter( shoot => shoot.id !== collision.shoot.id);
+                    return list;
+                })
+            }
+        })
+    }
 
     return (
         <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
@@ -159,7 +196,7 @@ export default function GameWindow(props: IModal){
                     {
                         shootsList.map((shoot, index)=>{
                             return (
-                                <span key={index} className="bg-white w-1 h-4 absolute" style={{left:`${shoot.x}px`, bottom:`${shoot.y}px`}}></span>
+                                <span key={index} className="bg-white w-1 h-4 absolute" style={{left:`${shoot.x}px`, top:`${shoot.y}px`}}></span>
                             );
                         })
                     }
