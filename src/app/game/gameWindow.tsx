@@ -3,7 +3,7 @@ import { IModal } from "@/app/components/legalNotices";
 import Image from "next/image";
 
 
-export interface IVirus{
+export interface IGameObject{
     x: number,
     y: number,
 }
@@ -13,10 +13,7 @@ export interface IGameWin{
     height: number
 }
 
-interface IShoot{
-    x: number,
-    y: number,
-}
+
 
 class GameIntervals{
     generateVirus?: NodeJS.Timeout |  string | number |undefined;
@@ -29,11 +26,13 @@ export default function GameWindow(props: IModal){
     const gameWin = useRef<HTMLDivElement>(null);
     const [gameSizes, setGameSizes] = useState<IGameWin>({ width: 0, height: 0 });
     const [playerX, setPlayerX]= useState(0);
-    const [virusList, setVirusList]= useState<Array<IVirus>>([]);
-    const [shootsList, setShootsList]= useState<Array<IShoot>>([]);
+    const [virusList, setVirusList]= useState<Array<IGameObject>>([]);
+    const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
+    let playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of 
 
     // game variables
     let virusSpeed = 10;
+    let shootsSpeed = 20;
     let playerSpeed= 10;
     let gameSpeed = 500;
     
@@ -41,19 +40,27 @@ export default function GameWindow(props: IModal){
     // constants physics
     const virusHitBox = 30;
     const playerHitBox = 25;
+    const shootHitBox = 2;
 
     // intervals
-    const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsVirus?: NodeJS.Timeout }>({});
+    const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsVirus?: NodeJS.Timeout; movementsShoots?: NodeJS.Timeout }>({});
 
     const handleKeyDown = (e: KeyboardEvent) => {
         switch (e.code) {      
             case "ArrowLeft":
-                setPlayerX((value) => (value - playerSpeed > 0 - playerHitBox ? value - playerSpeed : value));
+                setPlayerX((value) => {
+                    const newX = value - playerSpeed > 0 - playerHitBox ? value - playerSpeed : value;
+                    playerXRef.current = newX; // update ref
+                    return newX;
+                });
                 break;
             case "ArrowRight":
-                setPlayerX((value) => (value + playerSpeed < gameSizes.width - playerHitBox ? value + playerSpeed : value));
+                setPlayerX((value) => {
+                    const newX = value + playerSpeed < gameSizes.width - playerHitBox ? value + playerSpeed : value;
+                    playerXRef.current = newX;
+                    return newX;
+                });
                 break;
-
             case 'Space':
                 console.log('shoot');
                 generateShoot();
@@ -63,7 +70,6 @@ export default function GameWindow(props: IModal){
     };
 
     useEffect(()=>{
-        console.log(props.isVisible)
         window.addEventListener('keydown', handleKeyDown);
         
         if(gameWin.current && props.isVisible){ // test if modal game is visible and div mounted
@@ -75,7 +81,8 @@ export default function GameWindow(props: IModal){
             });
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
             intervalsRef.current.generateVirus = setInterval(()=>{generateVirus()}, 4000); // generate Virus each 4 seconds
-            intervalsRef.current.movementsVirus = setInterval(()=>{movementsVirus()}, gameSpeed); // mouve virus each seconds
+            intervalsRef.current.movementsVirus = setInterval(()=>{movementsVirus()}, gameSpeed); // move virus
+            intervalsRef.current.movementsShoots = setInterval(()=>{movementsShoots()}, gameSpeed)
             
             
             
@@ -84,6 +91,7 @@ export default function GameWindow(props: IModal){
             window.removeEventListener("keydown", handleKeyDown);
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsVirus);
+            clearInterval(intervalsRef.current.movementsShoots);
         };
         
     }, [props.isVisible]);
@@ -97,17 +105,15 @@ export default function GameWindow(props: IModal){
     }
     
     const generateShoot = () => {
-        console.log(playerX);
         setShootsList((prevList) => [
             ...prevList,
-            { x: playerX, y: 30 },
+            { x: playerXRef.current, y: 30 },
         ]);
     }
 
 
 
     const movementsVirus = () => {
-        console.log(playerX)
         setVirusList((prevList) =>
             prevList
                 .map((virus) => ({ // update virus coord
@@ -115,6 +121,18 @@ export default function GameWindow(props: IModal){
                     y: virus.y + virusSpeed,
                 }))
                 .filter((virus) => virus.y < gameSizes.height - virusHitBox) // remove virus out of window
+        );
+    }
+
+    const movementsShoots = () => {
+        console.log(shootsList)
+        setShootsList((prevList) =>
+            prevList
+                .map((shoot) => ({ // update shoots coord
+                    ...shoot,
+                    y: shoot.y - shootsSpeed,
+                }))
+                .filter((shoot) => shoot.y < 0 + shootHitBox) // remove virus out of window
         );
     }
 
@@ -144,4 +162,4 @@ export default function GameWindow(props: IModal){
         </div>
         
     );
-}
+} 
