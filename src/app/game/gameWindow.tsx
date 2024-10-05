@@ -7,6 +7,8 @@ import { gameObjectType } from "../utils/constants.";
 export interface IGameObject{
     x: number,
     y: number,
+    width: number,
+    height: number
 }
 
 export interface IGameWin{
@@ -15,13 +17,6 @@ export interface IGameWin{
 }
 
 
-
-class GameIntervals{
-    generateVirus?: NodeJS.Timeout |  string | number |undefined;
-    movementsVirus?: NodeJS.Timeout  | string | number | undefined;
-    movementsShoots?: NodeJS.Timeout  | string | number | undefined;
-
-}
 
 export default function GameWindow(props: IModal){
     const gameWin = useRef<HTMLDivElement>(null);
@@ -39,9 +34,9 @@ export default function GameWindow(props: IModal){
     
 
     // constants physics
-    const virusHitBox = 30;
     const playerHitBox = 48;
-    const shootHitBox = 2;
+    const virusHitBox = 30;
+
 
     // intervals
     const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsVirus?: NodeJS.Timeout; movementsShoots?: NodeJS.Timeout }>({});
@@ -102,13 +97,13 @@ export default function GameWindow(props: IModal){
             case gameObjectType.virus:
                 setVirusList((prevList) => [
                     ...prevList,
-                    { x: Math.random() * (gameSizes.width - virusHitBox), y: 0 },
+                    { x: Math.random() * (gameSizes.width - virusHitBox), y: 0, width: virusHitBox, height: virusHitBox },
                 ]);
                 break;
             case gameObjectType.shoot:
                 setShootsList((prevList) => [
                     ...prevList,
-                    { x: playerXRef.current + playerHitBox / 2, y: 30 },
+                    { x: playerXRef.current + playerHitBox / 2, y: 30, width: 4, height: 16 },
                 ]);
                 break;
         }
@@ -126,7 +121,7 @@ export default function GameWindow(props: IModal){
                             ...virus,
                             y: virus.y + virusSpeed, // depend on top
                         }))
-                        .filter((virus) => virus.y < gameSizes.height - virusHitBox) // remove virus out of window
+                        .filter((virus) => virus.y < gameSizes.height - virus.height) // remove virus out of window
                 );
             
                 break;
@@ -137,7 +132,7 @@ export default function GameWindow(props: IModal){
                             ...shoot,
                             y: shoot.y + shootsSpeed, // depend on bottom
                         }))
-                        .filter((shoot) => shoot.y > 0 + shootHitBox) // remove virus out of window
+                        .filter((shoot) => shoot.y > 0 + shoot.height) // remove virus out of window
                 );
             break;
         }
