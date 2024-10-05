@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import { IModal } from "@/app/components/legalNotices";
 import Image from "next/image";
+import { gameObjectType } from "../utils/constants.";
 
 
 export interface IGameObject{
@@ -39,7 +40,7 @@ export default function GameWindow(props: IModal){
 
     // constants physics
     const virusHitBox = 30;
-    const playerHitBox = 25;
+    const playerHitBox = 48;
     const shootHitBox = 2;
 
     // intervals
@@ -62,8 +63,7 @@ export default function GameWindow(props: IModal){
                 });
                 break;
             case 'Space':
-                console.log('shoot');
-                generateShoot();
+                generateObject(gameObjectType.shoot);
                 break;
     
         }
@@ -80,9 +80,9 @@ export default function GameWindow(props: IModal){
                 return win;
             });
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
-            intervalsRef.current.generateVirus = setInterval(()=>{generateVirus()}, 4000); // generate Virus each 4 seconds
-            intervalsRef.current.movementsVirus = setInterval(()=>{movementsVirus()}, gameSpeed); // move virus
-            intervalsRef.current.movementsShoots = setInterval(()=>{movementsShoots()}, gameSpeed)
+            intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, 4000); // generate Virus each 4 seconds
+            intervalsRef.current.movementsVirus = setInterval(()=>{movementsObject(gameObjectType.virus)}, gameSpeed); // move virus
+            intervalsRef.current.movementsShoots = setInterval(()=>{movementsObject(gameObjectType.shoot)}, gameSpeed) // move shoot
             
             
             
@@ -97,44 +97,55 @@ export default function GameWindow(props: IModal){
     }, [props.isVisible]);
 
 
-    const generateVirus = () => {
-        setVirusList((prevList) => [
-            ...prevList,
-            { x: Math.random() * (gameSizes.width - virusHitBox), y: 0 },
-        ]);
+    const generateObject = (type: string) => {
+        switch(type){
+            case gameObjectType.virus:
+                setVirusList((prevList) => [
+                    ...prevList,
+                    { x: Math.random() * (gameSizes.width - virusHitBox), y: 0 },
+                ]);
+                break;
+            case gameObjectType.shoot:
+                setShootsList((prevList) => [
+                    ...prevList,
+                    { x: playerXRef.current + playerHitBox / 2, y: 30 },
+                ]);
+                break;
+        }
+           
     }
     
-    const generateShoot = () => {
-        setShootsList((prevList) => [
-            ...prevList,
-            { x: playerXRef.current, y: 30 },
-        ]);
+
+
+    const movementsObject = (type: string) => {
+        switch(type){
+            case gameObjectType.virus:
+                setVirusList((prevList) =>
+                    prevList
+                        .map((virus) => ({ // update virus coord
+                            ...virus,
+                            y: virus.y + virusSpeed, // depend on top
+                        }))
+                        .filter((virus) => virus.y < gameSizes.height - virusHitBox) // remove virus out of window
+                );
+            
+                break;
+            case gameObjectType.shoot:
+                setShootsList((prevList) =>
+                    prevList
+                        .map((shoot) => ({ // update shoots coord
+                            ...shoot,
+                            y: shoot.y + shootsSpeed, // depend on bottom
+                        }))
+                        .filter((shoot) => shoot.y > 0 + shootHitBox) // remove virus out of window
+                );
+            break;
+        }
+        
     }
 
+        
 
-
-    const movementsVirus = () => {
-        setVirusList((prevList) =>
-            prevList
-                .map((virus) => ({ // update virus coord
-                    ...virus,
-                    y: virus.y + virusSpeed,
-                }))
-                .filter((virus) => virus.y < gameSizes.height - virusHitBox) // remove virus out of window
-        );
-    }
-
-    const movementsShoots = () => {
-        console.log(shootsList)
-        setShootsList((prevList) =>
-            prevList
-                .map((shoot) => ({ // update shoots coord
-                    ...shoot,
-                    y: shoot.y - shootsSpeed,
-                }))
-                .filter((shoot) => shoot.y < 0 + shootHitBox) // remove virus out of window
-        );
-    }
 
     return (
         <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
