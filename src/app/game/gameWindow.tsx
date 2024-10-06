@@ -90,7 +90,7 @@ export default function GameWindow(props: IModal){
             intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, 4000); // generate Virus each 4 seconds
             intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSpeed); // move virus          
         }
-        return () => { // remove intervals when unmount or invisible
+        return () => { // remove intervals when unmount or hidden
             window.removeEventListener("keydown", handleKeyDown);
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsObjects);
@@ -109,7 +109,6 @@ export default function GameWindow(props: IModal){
 
     const generateObject = (type: string) => {
         setCurrentId((id) => {
-    
             switch(type) {
                 case gameObjectType.virus:
                     setVirusList((prevList) => [
@@ -151,7 +150,7 @@ export default function GameWindow(props: IModal){
         
     }
 
-    /** when an object is created, we detect whether these new objects will collide with others. add this objects in the upcomingCollision array */
+    /** function that detects whether these new objects will collide with others. add this objects in the upcomingCollision array */
     const detectUpcomingCollisions = () => {
         const newCollisions: Array<IObjectCollision> = [];
         const updatedVirusList = [...virusList];
@@ -166,14 +165,15 @@ export default function GameWindow(props: IModal){
                     !shoot.upcomingCollision &&
                     !virus.upcomingCollision
                 ) {
-                    console.log('objects will collide');
+                    // console.log('objects will collide');
                     collisionDetected = true;
     
-                    // Marquer les objets comme ayant une collision
+                    // set upcomingCollision property to true
+
                     shoot.upcomingCollision = true;
                     virus.upcomingCollision = true;
     
-                    // Ajouter seulement les IDs à upcomingCollisions
+                    // add id's objects
                     newCollisions.push({ virusId: virus.id, shootId: shoot.id });
                 }
             });
@@ -194,27 +194,27 @@ export default function GameWindow(props: IModal){
             return { virus, shoot, index };
         }) 
         .filter((collision): collision is IUpdatedCollision => !!collision.virus && !!collision.shoot);;
-        console.log('updatedCollision', updatedCollisions)
+        // console.log('updatedCollision', updatedCollisions)
        
         for(let i = 0; i < updatedCollisions.length; i ++){
             if(updatedCollisions[i].virus && updatedCollisions[i].shoot){
                 if(updatedCollisions[i].virus.y + updatedCollisions[i].virus.height > updatedCollisions[i].shoot.y ) {
                     console.log('bou')
-                    // Mettre à jour upcomingCollisions en supprimant l'élément actuel
+                    // update  upcomingCollisions to remove actual object
                     setUpcomingCollisions((list) => {
-                        const newList = [...list]; // Créer une copie de la liste
-                        newList.splice(updatedCollisions[i].index, 1); // Supprimer l'élément en collision
+                        const newList = [...list]; 
+                        newList.splice(updatedCollisions[i].index, 1); //remove object into list
                         return newList; // Retourner la nouvelle liste
                     });
 
-                    // Mettre à jour la liste des virus
+                    // update virus list
                     setVirusList((list) => {
-                        return list.filter(virus => virus.id !== updatedCollisions[i].virus.id); // Filtrer les virus qui ne sont pas en collision
+                        return list.filter(virus => virus.id !== updatedCollisions[i].virus.id);
                     });
 
-                    // Mettre à jour la liste des tirs
+                    // update shoots list
                     setShootsList((list) => {
-                        return list.filter(shoot => shoot.id !== updatedCollisions[i].shoot.id); // Filtrer les tirs qui ne sont pas en collision
+                        return list.filter(shoot => shoot.id !== updatedCollisions[i].shoot.id); 
                     });
                 }
             }
