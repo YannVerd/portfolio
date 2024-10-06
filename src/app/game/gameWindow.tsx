@@ -199,18 +199,23 @@ export default function GameWindow(props: IModal){
         for(let i = 0; i < updatedCollisions.length; i ++){
             if(updatedCollisions[i].virus && updatedCollisions[i].shoot){
                 if(updatedCollisions[i].virus.y + updatedCollisions[i].virus.height > updatedCollisions[i].shoot.y ) {
-                    setUpcomingCollisions((list => {
-                        list.splice(updatedCollisions[i].index, 1);
-                        return list;
-                    }))
-                    setVirusList((list)=>{
-                        list.filter( virus => virus.id !== updatedCollisions[i].virus.id);
-                        return list;
-                    })
-                    setShootsList((list)=>{
-                        list.filter( shoot => shoot.id !== updatedCollisions[i].shoot.id);
-                        return list;
-                    })
+                    console.log('bou')
+                    // Mettre à jour upcomingCollisions en supprimant l'élément actuel
+                    setUpcomingCollisions((list) => {
+                        const newList = [...list]; // Créer une copie de la liste
+                        newList.splice(updatedCollisions[i].index, 1); // Supprimer l'élément en collision
+                        return newList; // Retourner la nouvelle liste
+                    });
+
+                    // Mettre à jour la liste des virus
+                    setVirusList((list) => {
+                        return list.filter(virus => virus.id !== updatedCollisions[i].virus.id); // Filtrer les virus qui ne sont pas en collision
+                    });
+
+                    // Mettre à jour la liste des tirs
+                    setShootsList((list) => {
+                        return list.filter(shoot => shoot.id !== updatedCollisions[i].shoot.id); // Filtrer les tirs qui ne sont pas en collision
+                    });
                 }
             }
         }
