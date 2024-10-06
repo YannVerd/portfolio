@@ -35,21 +35,24 @@ export default function GameWindow(props: IModal){
     const [playerX, setPlayerX]= useState(0);
     const [virusList, setVirusList]= useState<Array<IGameObject>>([]);
     const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
-
+    const [score, setScore]=useState(0);
+    const [lives, setLives]=useState(5);
+    
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
     const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of
     const currentId = useRef(0);
 
     // game variables
-    const virusSpeed = 10;
+    const virusSpeed = 5;
     const shootsSpeed = 20;
     const playerSpeed= 10;
-    const gameSpeed = 500;
+    const gameSpeed = 100;
+    const spawnSpeed = 4000;
     
     // constants physics
     const playerWidth = 48;
     const playerHeight = 25;
-    const virusHitBox = 30;
+    const virusHitBox = 35;
 
     // intervals
     const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsObjects?: NodeJS.Timeout }>({});
@@ -79,7 +82,7 @@ export default function GameWindow(props: IModal){
     useEffect(()=>{
         window.addEventListener('keydown', handleKeyDown);
         
-        if(gameWin.current && props.isVisible){ // test if modal game is visible and div mounted
+        if(gameWin.current && props.isVisible && lives > 0){ // test if modal game is visible and div mounted
             const { width, height } = gameWin.current.getBoundingClientRect();
             setGameSizes((win) => {
                 win.height = height;
@@ -88,7 +91,7 @@ export default function GameWindow(props: IModal){
             });
             playerXRef.current = Math.floor(width/2);
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
-            intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, 4000); // generate Virus each 4 seconds
+            intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, spawnSpeed); // generate Virus each 4 seconds
             intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSpeed); // move virus          
         }
         return () => { // remove intervals when unmount or hidden
@@ -108,6 +111,7 @@ export default function GameWindow(props: IModal){
         }
     }, [virusList, shootsList]);
 
+
     const generateObject = (type: string) => { 
         switch(type) {
             case gameObjectType.virus:
@@ -125,17 +129,35 @@ export default function GameWindow(props: IModal){
                 break;
         }
         currentId.current++
-}
+    }
 
     const movementsObject = () => {
-        setVirusList((prevList) =>
-            prevList
-                .map((virus) => ({ // update virus coord
+        setVirusList((prevList) => {
+            const updatedList = prevList
+                .map((virus) => ({ 
                     ...virus,
-                    y: virus.y + virusSpeed, // depend on top
-                }))
-                .filter((virus) => virus.y < gameSizes.height - virus.height) // remove virus out of window
-        );
+                    y: virus.y + virusSpeed, 
+                }));
+                
+            // Count how many viruses are out of bounds
+            const virusesOutOfBounds = updatedList.filter(
+                (virus) => virus.y >= gameSizes.height - virus.height
+            ).length;
+            console.log(virusesOutOfBounds)
+            // Filter the viruses that are still in bounds
+            const filteredList = updatedList.filter(
+                (virus) => virus.y < gameSizes.height - virus.height
+            );
+        
+            // Decrease lives after the list is updated, ensuring it happens once per render
+            if (virusesOutOfBounds > 0) {
+                setLives((prevLives) => Math.max(prevLives - virusesOutOfBounds, 0));
+                
+            }
+        
+            return filteredList;
+        });
+        
 
         setShootsList((prevList) =>
             prevList
@@ -167,7 +189,6 @@ export default function GameWindow(props: IModal){
                     collisionDetected = true;
     
                     // set upcomingCollision property to true
-
                     shoot.upcomingCollision = true;
                     virus.upcomingCollision = true;
     
@@ -212,6 +233,7 @@ export default function GameWindow(props: IModal){
                     setShootsList((list) => {
                         return list.filter(shoot => shoot.id !== updatedCollisions[i].shoot.id); 
                     });
+                    setScore((score)=>score+1)
                 }
             }
         }
@@ -239,7 +261,10 @@ export default function GameWindow(props: IModal){
                             );
                         })
                     }
-                    <Image src="/game/player.png" width={50} height={50} alt="easterEgg" className={`absolute bottom-0`} style={{left:`${playerX}px`}}/>
+                    <Image src="/game/player.png" width={50} height={50} alt="easterEgg" className="absolute bottom-0" style={{left:`${playerX}px`}}/>
+                    <h4 className="absolute top-0 left-[3%]">Life: {lives}</h4>
+                    <h4 className="absolute top-0 right-[5%]">Score: {score}</h4>
+                    
             </div>
         </div>
         
