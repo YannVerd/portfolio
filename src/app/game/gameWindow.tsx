@@ -19,8 +19,14 @@ interface IGameWin{ // Game Window (div)
 }
 
 interface IObjectCollision{
-    virus: IGameObject,
-    shoot: IGameObject
+    virusId: number,
+    shootId: number
+}
+
+interface IUpdatedCollision {
+    virus: IGameObject;
+    shoot: IGameObject;
+    index: number;
 }
 
 export default function GameWindow(props: IModal){
@@ -31,13 +37,13 @@ export default function GameWindow(props: IModal){
     const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
     const [currentId, setCurrentId] = useState(0);
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
-    let playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of 
+    const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of 
 
     // game variables
-    let virusSpeed = 10;
-    let shootsSpeed = 20;
-    let playerSpeed= 10;
-    let gameSpeed = 500;
+    const virusSpeed = 10;
+    const shootsSpeed = 20;
+    const playerSpeed= 10;
+    const gameSpeed = 500;
     
     // constants physics
     const playerWidth = 48;
@@ -66,7 +72,6 @@ export default function GameWindow(props: IModal){
             case 'Space':
                 generateObject(gameObjectType.shoot);
                 break;
-    
         }
     };
 
@@ -80,6 +85,7 @@ export default function GameWindow(props: IModal){
                 win.width = width;
                 return win;
             });
+            playerXRef.current = Math.floor(width/2);
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
             intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, 4000); // generate Virus each 4 seconds
             intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSpeed); // move virus          
@@ -91,30 +97,40 @@ export default function GameWindow(props: IModal){
         }; 
     }, [props.isVisible]);
 
+    useEffect(() => {
+        if (virusList.length > 0 && shootsList.length > 0) {
+            detectUpcomingCollisions();
+        }
+        if(upcomingCollisions.length > 0){
+            console.log('upcoming collisions :',upcomingCollisions)
+            detectCollisions();
+        }
+    }, [virusList, shootsList]);
 
     const generateObject = (type: string) => {
-        switch(type){
-            case gameObjectType.virus:
-                setVirusList((prevList) => [
-                    ...prevList,
-                    { id: currentId, x: Math.random() * (gameSizes.width - virusHitBox), y: 0, width: virusHitBox, height: virusHitBox, upcomingCollision: false },
-                ]);
-                setCurrentId((id)=>id++);
-                break;
-               
-            case gameObjectType.shoot:
-                setShootsList((prevList) => [
-                    ...prevList,
-                    { id: currentId, x: playerXRef.current + playerWidth / 2, y: gameSizes.height - playerHeight , width: 4, height: 16, upcomingCollision: false },
-                ]);
-                setCurrentId((id)=>id++);
-                break;
-        } 
-        detectUpcomingCollisions();   
+        setCurrentId((id) => {
+    
+            switch(type) {
+                case gameObjectType.virus:
+                    setVirusList((prevList) => [
+                        ...prevList,
+                        { id: id, x: Math.random() * (gameSizes.width - virusHitBox), y: 0, width: virusHitBox, height: virusHitBox, upcomingCollision: false },
+                    ]);
+                    break;
+                   
+                case gameObjectType.shoot:
+                    setShootsList((prevList) => [
+                        ...prevList,
+                        { id: id, x: playerXRef.current + playerWidth / 2, y: gameSizes.height - playerHeight, width: 4, height: 16, upcomingCollision: false },
+                    ]);
+                    break;
+            }
+            const newId = id + 1;
+            return newId;
+        });
     }
 
     const movementsObject = () => {
-
         setVirusList((prevList) =>
             prevList
                 .map((virus) => ({ // update virus coord
@@ -133,50 +149,72 @@ export default function GameWindow(props: IModal){
                 .filter((shoot) => shoot.y > 0 + shoot.height) // remove virus out of window
         );  
         
-        detectCollisions();
     }
 
     /** when an object is created, we detect whether these new objects will collide with others. add this objects in the upcomingCollision array */
     const detectUpcomingCollisions = () => {
-
-        virusList.forEach((virus) => {
-            shootsList.forEach((shoot) => {
+        const newCollisions: Array<IObjectCollision> = [];
+        const updatedVirusList = [...virusList];
+        const updatedShootsList = [...shootsList];
+        let collisionDetected = false;
+    
+        updatedVirusList.forEach((virus) => {
+            updatedShootsList.forEach((shoot) => {
                 if (
                     virus.x < shoot.x + shoot.width &&
                     virus.x + virus.width > shoot.x &&
-                    !shoot.upcomingCollision
-                  ) {
-                    setUpcomingCollisions((prevList)=>{
-                        let newList = [...prevList];
-                        shoot.upcomingCollision = true;
-                        virus.upcomingCollision = true;
-                        newList.push({virus: virus, shoot: shoot});
-                        return newList
-                    })
-                  }
-            })
+                    !shoot.upcomingCollision &&
+                    !virus.upcomingCollision
+                ) {
+                    console.log('objects will collide');
+                    collisionDetected = true;
+    
+                    // Marquer les objets comme ayant une collision
+                    shoot.upcomingCollision = true;
+                    virus.upcomingCollision = true;
+    
+                    // Ajouter seulement les IDs à upcomingCollisions
+                    newCollisions.push({ virusId: virus.id, shootId: shoot.id });
+                }
+            });
         });
-
-    }
-
+    
+        if (collisionDetected) {
+            setUpcomingCollisions((prevList) => [...prevList, ...newCollisions]);
+        }
+        console.log('upcomingCollisions', upcomingCollisions)
+    };
+    
+    
     /**this function detects the objects that will collide. And removes them from the list when they do. */
     const detectCollisions = () => {
-        upcomingCollisions.forEach((collision, index) => {
-            if(collision.virus.y + collision.virus.height > collision.shoot.y ) {
-                setUpcomingCollisions((list => {
-                    list.splice(index, 1);
-                    return list;
-                }))
-                setVirusList((list)=>{
-                    list.filter( virus => virus.id !== collision.virus.id);
-                    return list;
-                })
-                setShootsList((list)=>{
-                    list.filter( shoot => shoot.id !== collision.shoot.id);
-                    return list;
-                })
+        const updatedCollisions: IUpdatedCollision[] = upcomingCollisions.map((collision, index) => {
+            const virus = virusList.find((v) => v.id === collision.virusId);
+            const shoot = shootsList.find((s) => s.id === collision.shootId);
+            return { virus, shoot, index };
+        }) 
+        .filter((collision): collision is IUpdatedCollision => !!collision.virus && !!collision.shoot);;
+        console.log('updatedCollision', updatedCollisions)
+       
+        for(let i = 0; i < updatedCollisions.length; i ++){
+            if(updatedCollisions[i].virus && updatedCollisions[i].shoot){
+                if(updatedCollisions[i].virus.y + updatedCollisions[i].virus.height > updatedCollisions[i].shoot.y ) {
+                    setUpcomingCollisions((list => {
+                        list.splice(updatedCollisions[i].index, 1);
+                        return list;
+                    }))
+                    setVirusList((list)=>{
+                        list.filter( virus => virus.id !== updatedCollisions[i].virus.id);
+                        return list;
+                    })
+                    setShootsList((list)=>{
+                        list.filter( shoot => shoot.id !== updatedCollisions[i].shoot.id);
+                        return list;
+                    })
+                }
             }
-        })
+        }
+
     }
 
     return (

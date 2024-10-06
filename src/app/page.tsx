@@ -46,7 +46,7 @@ export default function Home() {
               </h3>
               <span className="hidden md:block md:animate-cursor border-r-4 border-secondary h-8"></span>
             </div>
-            <p className="w-8/12 lg:self-start mt-4 mb-4 lg:mb-0 text-justify">Titulaire du titre de développeur web depuis le 1er Juillet 2024, je suis à la recherche d'une première expérience professionnelle pour me spécialiser et 
+            <p className="w-8/12 lg:self-start mt-4 mb-4 lg:mb-0 text-justify">Titulaire du titre de développeur web depuis le 1er Juilconst 2024, je suis à la recherche d'une première expérience professionnelle pour me spécialiser et 
               parfaire mes connaissances. D'un naturel sociable, dynamique et curieux, je suis passionné par ce nouveau monde qui s'ouvre à moi.</p>
             <p className="w-8/12 lg:self-start mt-1 mb-4 lg:mb-0 text-justify">  Depuis l'obtention de mon diplôme, je n'ai de cesse de pratiquer pour progresser en effectuant des projets personnels que ce soit en Nextjs, c++ ou html/css/js.
               N'hésitez pas à me contacter via les mentions légales ou mon CV.
