@@ -38,7 +38,7 @@ export default function GameWindow(props: IModal){
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
     const [gameOver, setGameOver] = useState(false);
-    const [gameLevel, setGameLevel] = useState (difficulties.veryEasy)
+    const [gameLevel, setGameLevel] = useState (difficulties[0])
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
 
 
@@ -47,10 +47,10 @@ export default function GameWindow(props: IModal){
 
     // game variables
     let virusSpeed = 5;
-    const shootsSpeed = 20;
-    const playerSpeed= 10;
+    let playerSpeed= virusSpeed*2;
+    let shootsSpeed = playerSpeed*1.5;
     const gameSpeed = 100;
-    let spawnSpeed = 4000;
+    let spawnSpeed = 3000;
     
     // constants physics
     const playerWidth = 48;
@@ -116,8 +116,11 @@ export default function GameWindow(props: IModal){
 
     //handle difficulty
     useEffect(()=>{
-        if(score > 10){
-            virusSpeed = 10
+        if(score >= 10){
+            const ten= Math.floor(score/10);
+            console.log(ten)
+            setGameLevel(difficulties[ten]);
+            ten%2 === 1 ? spawnSpeed -= 500 : virusSpeed += 5;
         }
     }, [score])
 
