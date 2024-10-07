@@ -37,6 +37,7 @@ export default function GameWindow(props: IModal){
     const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
+    const [gameOver, setGameOver] = useState(false)
     
 
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
@@ -44,7 +45,7 @@ export default function GameWindow(props: IModal){
     const currentId = useRef(0);
 
     // game variables
-    const virusSpeed = 2;
+    const virusSpeed = 20;
     const shootsSpeed = 20;
     const playerSpeed= 10;
     const gameSpeed = 100;
@@ -111,6 +112,14 @@ export default function GameWindow(props: IModal){
             detectCollisions();
         }
     }, [virusList, shootsList]);
+
+    useEffect(()=>{
+        if(lives < 1){
+            setGameOver(true);
+            clearInterval(intervalsRef.current.generateVirus);
+            clearInterval(intervalsRef.current.movementsObjects);
+        }
+    }, [lives])
 
 
     const generateObject = (type: string) => { 
@@ -244,11 +253,19 @@ export default function GameWindow(props: IModal){
 
     return (
         <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
-            <div className="flex justify-between items-center w-full bg-blue-700 border-2 border-gray-400">
-                <h3 className="text-xl ml-">Virus attack</h3>
+            <div className="flex justify-between items-center w-full bg-gradient-to-r from-win98blue1 via-win98blue2 to-win98blue3 border-2 border-gray-400">
+                <h3 className="text-xl ml-2">Virus attack</h3>
                 <button className="bg-gray-400 hover:bg-gray-200 text-white font-bold py-2 px-4 border my-1 mr-1" onClick={()=> { props.hook('game')}}>X</button>
             </div>
-            <div ref={gameWin} className="h-full w-full relative">
+            { 
+                gameOver ? 
+                <div ref={gameWin} className="h-full w-full flex flex-col justify-center items-center">
+                    <h2 className="text-2xl"> Game Over</h2>
+                    <h3>Final Score : {score}</h3>
+                    <button>retry</button>
+                </div>
+                :
+                <div ref={gameWin} className="h-full w-full relative">
                     {
                         virusList.map((virus, index)=>{
                             return (
@@ -267,7 +284,8 @@ export default function GameWindow(props: IModal){
                     <h4 className="absolute top-0 left-[3%]">Life: {lives}</h4>
                     <h4 className="absolute top-0 right-[5%]">Score: {score}</h4>
                     
-            </div>
+                </div>
+            }
         </div>
         
     );

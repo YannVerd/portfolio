@@ -11,7 +11,10 @@ const config: Config = {
     extend: {
       colors: {
        secondary: '#048b9a',
-       secondaryLight: '#bbd7dc'
+       secondaryLight: '#bbd7dc',
+       win98blue1: '#004a99',
+        win98blue2: '#0078d7',
+        win98blue3: '#4facfe',
       },
       keyframes: {
         virus: {
