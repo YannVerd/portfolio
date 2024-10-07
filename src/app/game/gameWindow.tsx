@@ -32,18 +32,19 @@ interface IUpdatedCollision {
 export default function GameWindow(props: IModal){
     const gameWin = useRef<HTMLDivElement>(null);
     const [gameSizes, setGameSizes] = useState<IGameWin>({ width: 0, height: 0 });
-    const [playerX, setPlayerX]= useState(0);
+    const [playerX, setPlayerX]= useState(0); // keep this useState state for rendering
     const [virusList, setVirusList]= useState<Array<IGameObject>>([]);
     const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
     
+
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
-    const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of
+    const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of player x coordQ
     const currentId = useRef(0);
 
     // game variables
-    const virusSpeed = 5;
+    const virusSpeed = 2;
     const shootsSpeed = 20;
     const playerSpeed= 10;
     const gameSpeed = 100;
@@ -132,6 +133,7 @@ export default function GameWindow(props: IModal){
     }
 
     const movementsObject = () => {
+        console.log("in movementsObject function")
         setVirusList((prevList) => {
             const updatedList = prevList
                 .map((virus) => ({ 
@@ -143,7 +145,7 @@ export default function GameWindow(props: IModal){
             const virusesOutOfBounds = updatedList.filter(
                 (virus) => virus.y >= gameSizes.height - virus.height
             ).length;
-            console.log(virusesOutOfBounds)
+            console.log("in setVirusList, virus out counts :", virusesOutOfBounds)
             // Filter the viruses that are still in bounds
             const filteredList = updatedList.filter(
                 (virus) => virus.y < gameSizes.height - virus.height
