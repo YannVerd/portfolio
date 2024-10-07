@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import { IModal } from "@/app/components/legalNotices";
 import Image from "next/image";
-import { gameObjectType } from "../utils/constants.";
+import { difficulties, gameObjectType } from "../utils/constants.";
 
 
 interface IGameObject{
@@ -38,21 +38,24 @@ export default function GameWindow(props: IModal){
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
     const [gameOver, setGameOver] = useState(false);
+    const [gameLevel, setGameLevel] = useState (difficulties.veryEasy)
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
+
+
     const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of player x coordQ
     const currentId = useRef(0);
 
     // game variables
-    const virusSpeed = 5;
+    let virusSpeed = 5;
     const shootsSpeed = 20;
     const playerSpeed= 10;
     const gameSpeed = 100;
-    const spawnSpeed = 4000;
+    let spawnSpeed = 4000;
     
     // constants physics
     const playerWidth = 48;
     const playerHeight = 25;
-    const virusHitBox = 35;
+    const virusHitBox = 37;
 
     // intervals
     const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsObjects?: NodeJS.Timeout }>({});
@@ -110,6 +113,13 @@ export default function GameWindow(props: IModal){
             detectCollisions();
         }
     }, [virusList, shootsList]);
+
+    //handle difficulty
+    useEffect(()=>{
+        if(score > 10){
+            virusSpeed = 10
+        }
+    }, [score])
 
     // handle Game Over
     useEffect(()=>{
@@ -287,6 +297,7 @@ export default function GameWindow(props: IModal){
                     }
                     <Image src="/game/player.png" width={50} height={50} alt="easterEgg" className="absolute bottom-0" style={{left:`${playerX}px`}}/>
                     <h4 className="absolute top-0 left-[3%]">Life: {lives}</h4>
+                    <h4 className="absolute top-0 left-[20%]">Level: {gameLevel}</h4>
                     <h4 className="absolute top-0 right-[5%]">Score: {score}</h4>
                     
                 </div>
