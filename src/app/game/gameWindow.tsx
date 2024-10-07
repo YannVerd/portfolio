@@ -37,15 +37,13 @@ export default function GameWindow(props: IModal){
     const [shootsList, setShootsList]= useState<Array<IGameObject>>([]);
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
-    const [gameOver, setGameOver] = useState(false)
-    
-
+    const [gameOver, setGameOver] = useState(false);
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
     const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of player x coordQ
     const currentId = useRef(0);
 
     // game variables
-    const virusSpeed = 20;
+    const virusSpeed = 5;
     const shootsSpeed = 20;
     const playerSpeed= 10;
     const gameSpeed = 100;
@@ -84,7 +82,7 @@ export default function GameWindow(props: IModal){
     useEffect(()=>{
         window.addEventListener('keydown', handleKeyDown);
         
-        if(gameWin.current && props.isVisible && lives > 0){ // test if modal game is visible and div mounted
+        if(gameWin.current && props.isVisible && !gameOver){ // test if modal game is visible and div mounted
             const { width, height } = gameWin.current.getBoundingClientRect();
             setGameSizes((win) => {
                 win.height = height;
@@ -101,7 +99,7 @@ export default function GameWindow(props: IModal){
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsObjects);
         }; 
-    }, [props.isVisible]);
+    }, [props.isVisible, gameOver]);
 
     useEffect(() => {
         if (virusList.length > 0 && shootsList.length > 0) {
@@ -113,11 +111,17 @@ export default function GameWindow(props: IModal){
         }
     }, [virusList, shootsList]);
 
+    // handle Game Over
     useEffect(()=>{
         if(lives < 1){
             setGameOver(true);
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsObjects);
+            setScore(0);
+            setLives(5);
+            setVirusList(()=> []);
+            setShootsList(()=>[]);
+            setUpcomingCollisions(()=>[]);
         }
     }, [lives])
 
@@ -142,7 +146,7 @@ export default function GameWindow(props: IModal){
     }
 
     const movementsObject = () => {
-        console.log("in movementsObject function")
+        // console.log("in movementsObject function")
         setVirusList((prevList) => {
             const updatedList = prevList
                 .map((virus) => ({ 
@@ -154,7 +158,7 @@ export default function GameWindow(props: IModal){
             const virusesOutOfBounds = updatedList.filter(
                 (virus) => virus.y >= gameSizes.height - virus.height
             ).length;
-            console.log("in setVirusList, virus out counts :", virusesOutOfBounds)
+            // console.log("in setVirusList, virus out counts :", virusesOutOfBounds)
             // Filter the viruses that are still in bounds
             const filteredList = updatedList.filter(
                 (virus) => virus.y < gameSizes.height - virus.height
@@ -251,6 +255,7 @@ export default function GameWindow(props: IModal){
 
     }
 
+
     return (
         <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
             <div className="flex justify-between items-center w-full bg-gradient-to-r from-win98blue1 via-win98blue2 to-win98blue3 border-2 border-gray-400">
@@ -262,7 +267,7 @@ export default function GameWindow(props: IModal){
                 <div ref={gameWin} className="h-full w-full flex flex-col justify-center items-center">
                     <h2 className="text-2xl"> Game Over</h2>
                     <h3>Final Score : {score}</h3>
-                    <button>retry</button>
+                    <button className="bg-transparent" onClick={()=> setGameOver(false)}>retry</button>
                 </div>
                 :
                 <div ref={gameWin} className="h-full w-full relative">
