@@ -55,7 +55,7 @@ export default function GameWindow(props: IModal){
     // constants physics
     const playerWidth = 48;
     const playerHeight = 25;
-    const virusHitBox = 37;
+    const virusHitBox = 40;
 
     // intervals
     const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsObjects?: NodeJS.Timeout }>({});
@@ -299,6 +299,10 @@ export default function GameWindow(props: IModal){
                     <h4 className="absolute top-0 left-[3%]">Life: {lives}</h4>
                     <h4 className="absolute top-0 left-[20%]">Level: {gameLevel}</h4>
                     <h4 className="absolute top-0 right-[5%]">Score: {score}</h4>
+                    <p className="absolute bottom-10 ml-2 text-gray-500"> left and rigth: move</p>
+                    <p className="absolute bottom-6 ml-2 text-gray-500"> space: shoot</p>
+
+
                     
                 </div>
             }
