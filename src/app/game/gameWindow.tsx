@@ -48,11 +48,15 @@ export default function GameWindow(props: IModal){
     const [gameOver, setGameOver] = useState(false);
     const [gameLevel, setGameLevel] = useState (difficulties[0].name)
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
+    const threshold = 10; // swipe sensibility in px
+    const touchStartX = useRef(0); // initial x position of touch
+    const touchStartTime = useRef<number | null>(null); // start time touch
 
 
     const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of player x coordQ
     const currentId = useRef(0);
 
+    // game settings
     const initialsGameSettings: IGameSettings= {
         virusSpeed: 5,
         playerSpeed: 10,  
@@ -75,9 +79,56 @@ export default function GameWindow(props: IModal){
     const playerHeight = 25;
     const virusHitBox = 40;
   
+    
     // intervals
     const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsObjects?: NodeJS.Timeout }>({});
 
+    /*-------------------- handle tactils events ---------------------*/
+    const handleTouchStart = (e: TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchStartTime.current = e.timeStamp;
+
+    };
+
+    const handleSwipe = (direction: 'left' | 'right') => {
+        const moveDistance = gameSettings.current.playerSpeed; // Player swipe distance
+        if (direction === 'left') {
+            setPlayerX((prev) => Math.max(0, prev - moveDistance));
+            playerXRef.current = Math.max(0, playerXRef.current - moveDistance);
+            
+        } else if (direction === 'right') {
+            setPlayerX((prev) => Math.min(gameSizes.width - playerWidth/2, prev + moveDistance)); // right limits
+            playerXRef.current = Math.min(gameSizes.width - playerWidth/2, playerXRef.current + moveDistance);
+        }
+        
+    };
+     
+
+    const handleTouchMove = (e: TouchEvent) => {
+        const touchEndX = e.touches[0].clientX;
+        const diffX = touchEndX - touchStartX.current;
+
+        // identify if is left or right wipe
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0) {
+                handleSwipe('right'); 
+            } else {
+                handleSwipe('left'); 
+            }
+        }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+        if (touchStartTime.current !== null) {
+            const timeTouch =e.timeStamp - touchStartTime.current;
+            const touch = e.changedTouches[0];
+            if (timeTouch < 300 && touch) {
+                generateObject('shoot');
+            }
+        }
+    };
+
+    /*-----------------handle Keyboard events ----------------------*/
     const handleKeyDown = (e: KeyboardEvent) => {
         switch (e.code) {      
             case "ArrowLeft":
@@ -101,9 +152,18 @@ export default function GameWindow(props: IModal){
     };
 
     useEffect(()=>{
-        window.addEventListener('keydown', handleKeyDown);
+        const isTouchDevice = window.matchMedia("(hover: none)").matches; // detect if hover is disabled: yes = tactil screen
+        if(isTouchDevice){
+            window.addEventListener('touchstart', handleTouchStart);
+            window.addEventListener('touchmove', handleTouchMove);
+            window.addEventListener('touchend', handleTouchEnd);
+        }else{
+            window.addEventListener('keydown', handleKeyDown);
+        }
+        
         
         if(gameWin.current && props.isVisible && !gameOver){ // test if modal game is visible and div mounted
+            setScore(0);
             const { width, height } = gameWin.current.getBoundingClientRect();
             setGameSizes((win) => {
                 win.height = height;
@@ -116,7 +176,13 @@ export default function GameWindow(props: IModal){
             intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSettings.current.gameSpeed); // move virus          
         }
         return () => { // remove intervals when unmount or hidden
-            window.removeEventListener("keydown", handleKeyDown);
+            if(isTouchDevice){
+                window.removeEventListener('touchstart', handleTouchStart);
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
+            }else{
+                window.addEventListener('keydown', handleKeyDown);
+            }
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsObjects);
         }; 
@@ -156,7 +222,6 @@ export default function GameWindow(props: IModal){
             setGameOver(true);
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsObjects);
-            setScore(0);
             setLives(5);
             setVirusList(()=> []);
             setShootsList(()=>[]);
@@ -210,14 +275,10 @@ export default function GameWindow(props: IModal){
         
             // Decrease lives after the list is updated, ensuring it happens once per render
             if (virusesOutOfBounds > 0) {
-                setLives((prevLives) => Math.max(prevLives - virusesOutOfBounds, 0));
-                
+                setLives((prevLives) => Math.max(prevLives - virusesOutOfBounds, 0));         
             }
-        
             return filteredList;
         });
-        
-
         setShootsList((prevList) =>
             prevList
                 .map((shoot) => ({ // update shoots coord
