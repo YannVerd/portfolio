@@ -1,7 +1,7 @@
 'use client';
 import {useState} from "react";
 import Header from "@/app/components/header";
-import Skill from "./components/skill";
+import SkillCard from "./components/skillCard";
 import ProjectCard from "./components/projectCard";
 import LegalNotices from "./components/legalNotices";
 import Image from "next/image";
@@ -61,7 +61,7 @@ export default function Home() {
             {
               skills.map((skill, index) => {
                 return (
-                  <Skill name={skill} key={index}/>
+                  <SkillCard name={skill} key={index}/>
                 );
               })
             }
@@ -80,7 +80,7 @@ export default function Home() {
             }
           </div>
         </section>
-        <a href="#presentationSection"><Image src="/arrowup.png" alt="Arrow Up" width={34} height={24} className="hover:animate-bounce"/></a>
+        <a href="#presentationSection"><Image src="/arrowup.png" alt="Arrow Up" width={34} height={24} className="w-auto h-8 mt-8 animate-bounce"/></a>
       </main>  
       <footer className="flex items-center">
         <LegalNotices isVisible={legalNotices} hook={handlingModal}/>
