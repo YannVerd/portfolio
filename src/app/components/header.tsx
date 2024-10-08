@@ -29,16 +29,18 @@ export default function Header(props: IHeader){
                     
                 </div>
             </div>
-            <nav className="hidden md:flex w-[80%] lg:w-[50%] flex-col md:flex-row flex-wrap justify-end items-center mr-6 md:gap-28">
-                {
-                    sections.map((section, index) => {
-                        return (
-                            <a key={index} className="hover:text-secondary hover:decoration-secondary hover:animate-blink hover:underline font-bold text-2xl" href={`#${section.id}`}>{section.name}</a>
-                        );
-                    })                  
-                }
+            <div className="flex justify-end w-[80%] lg:w-[50%]">
+                <nav className="hidden md:flex flex-row justify-end items-center mr-6 gap-28">
+                    {
+                        sections.map((section, index) => {
+                            return (
+                                <a key={index} className="hover:text-secondary hover:decoration-secondary hover:animate-blink hover:underline font-bold text-2xl" href={`#${section.id}`}>{section.name}</a>
+                            );
+                        })                  
+                    }
+                </nav> 
                 <SwitcherTheme />
-            </nav>  
+            </div>
         </header>
     );
 }

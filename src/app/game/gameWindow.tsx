@@ -46,7 +46,8 @@ export default function GameWindow(props: IModal){
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
     const [gameOver, setGameOver] = useState(false);
-    const [gameLevel, setGameLevel] = useState (difficulties[0].name)
+    const [gameLevel, setGameLevel] = useState (difficulties[0].name);
+    const [instructions, setInstructions]= useState({moves: "left/right arrows", shoot: 'space'})
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
     const threshold = 10; // swipe sensibility in px
     const touchStartX = useRef(0); // initial x position of touch
@@ -154,6 +155,11 @@ export default function GameWindow(props: IModal){
     useEffect(()=>{
         const isTouchDevice = window.matchMedia("(hover: none)").matches; // detect if hover is disabled: yes = tactil screen
         if(isTouchDevice){
+            setInstructions((inst)=> {
+                inst.moves= 'swipe';
+                inst.shoot = 'tap'
+                return inst;
+            })
             window.addEventListener('touchstart', handleTouchStart);
             window.addEventListener('touchmove', handleTouchMove);
             window.addEventListener('touchend', handleTouchEnd);
@@ -394,8 +400,8 @@ export default function GameWindow(props: IModal){
                     <h4 className="absolute top-0 left-[3%]">Life: {lives}</h4>
                     <h4 className="absolute top-0 left-[20%]">Level: {gameLevel}</h4>
                     <h4 className="absolute top-0 right-[5%]">Score: {score}</h4>
-                    <p className="absolute bottom-10 ml-2 text-gray-500"> left and rigth: move</p>
-                    <p className="absolute bottom-6 ml-2 text-gray-500"> space: shoot</p>
+                    <p className="absolute bottom-10 ml-2 text-gray-500"> {instructions.moves}: move</p>
+                    <p className="absolute bottom-6 ml-2 text-gray-500"> {instructions.shoot}: shoot</p>
                     <p className="absolute bottom-6 right-[5%] text-gray-500">work in progress</p>
                     
                 </div>
