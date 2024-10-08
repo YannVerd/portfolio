@@ -171,7 +171,7 @@ export default function GameWindow(props: IModal){
                 return win;
             });
             playerXRef.current = Math.floor(width/2);
-            setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
+            setPlayerX(Math.floor(width/2)); // set initial play position to the middel of the game window
             intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, gameSettings.current.spawnSpeed); // generate Virus each 4 seconds
             intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSettings.current.gameSpeed); // move virus          
         }
@@ -205,13 +205,10 @@ export default function GameWindow(props: IModal){
             difficulties[ten].reach = true
             setGameLevel(difficulties[ten].name);   
                 ten < 4 ? gameSettings.current.spawnSpeed -= 300 : gameSettings.current.spawnSpeed -= 500;
-                console.log(gameSettings.current.spawnSpeed)
                 gameSettings.current.virusSpeed += 5;
-                console.log(gameSettings.current.virusSpeed)
                 if(ten === 4){
                     gameSettings.current.playerSpeed += 5;
                 }
-
         }
     }, [score])
 
@@ -396,8 +393,6 @@ export default function GameWindow(props: IModal){
                     <h4 className="absolute top-0 right-[5%]">Score: {score}</h4>
                     <p className="absolute bottom-10 ml-2 text-gray-500"> left and rigth: move</p>
                     <p className="absolute bottom-6 ml-2 text-gray-500"> space: shoot</p>
-
-
                     
                 </div>
             }
