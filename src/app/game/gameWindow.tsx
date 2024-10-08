@@ -29,6 +29,14 @@ interface IUpdatedCollision {
     index: number;
 }
 
+interface IGameSettings{
+    virusSpeed: number;
+    playerSpeed: number;  
+    shootsSpeed: number;  
+    gameSpeed: number;
+    spawnSpeed: number;
+}
+
 export default function GameWindow(props: IModal){
     const gameWin = useRef<HTMLDivElement>(null);
     const [gameSizes, setGameSizes] = useState<IGameWin>({ width: 0, height: 0 });
@@ -38,25 +46,35 @@ export default function GameWindow(props: IModal){
     const [score, setScore]=useState(0);
     const [lives, setLives]=useState(5);
     const [gameOver, setGameOver] = useState(false);
-    const [gameLevel, setGameLevel] = useState (difficulties[0])
+    const [gameLevel, setGameLevel] = useState (difficulties[0].name)
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
 
 
     const playerXRef = useRef(0); // to bypass asynchronus effect for retrieve current value of player x coordQ
     const currentId = useRef(0);
 
-    // game variables
-    let virusSpeed = 5;
-    let playerSpeed= virusSpeed*2;
-    let shootsSpeed = playerSpeed*1.5;
-    const gameSpeed = 100;
-    let spawnSpeed = 3000;
+    const initialsGameSettings: IGameSettings= {
+        virusSpeed: 5,
+        playerSpeed: 10,  
+        shootsSpeed: 15,  
+        gameSpeed: 100,
+        spawnSpeed:2500,
+
+    }
     
-    // constants physics
+    const gameSettings = useRef<IGameSettings>({
+        virusSpeed: initialsGameSettings.virusSpeed,
+        playerSpeed: initialsGameSettings.playerSpeed, 
+        shootsSpeed: initialsGameSettings.shootsSpeed, 
+        gameSpeed: initialsGameSettings.gameSpeed,
+        spawnSpeed: initialsGameSettings.spawnSpeed,
+    });
+    
+    // constants physics game
     const playerWidth = 48;
     const playerHeight = 25;
     const virusHitBox = 40;
-
+  
     // intervals
     const intervalsRef = useRef<{ generateVirus?: NodeJS.Timeout; movementsObjects?: NodeJS.Timeout }>({});
 
@@ -64,14 +82,14 @@ export default function GameWindow(props: IModal){
         switch (e.code) {      
             case "ArrowLeft":
                 setPlayerX((value) => {
-                    const newX = value - playerSpeed > 0 - playerWidth? value - playerSpeed : value;
+                    const newX = value - gameSettings.current.playerSpeed > 0 - playerWidth? value - gameSettings.current.playerSpeed : value;
                     playerXRef.current = newX; // update ref
                     return newX;
                 });
                 break;
             case "ArrowRight":
                 setPlayerX((value) => {
-                    const newX = value + playerSpeed < gameSizes.width - playerWidth ? value + playerSpeed : value;
+                    const newX = value + gameSettings.current.playerSpeed < gameSizes.width - playerWidth ? value + gameSettings.current.playerSpeed : value;
                     playerXRef.current = newX;
                     return newX;
                 });
@@ -94,8 +112,8 @@ export default function GameWindow(props: IModal){
             });
             playerXRef.current = Math.floor(width/2);
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of de game window
-            intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, spawnSpeed); // generate Virus each 4 seconds
-            intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSpeed); // move virus          
+            intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, gameSettings.current.spawnSpeed); // generate Virus each 4 seconds
+            intervalsRef.current.movementsObjects = setInterval(()=>{movementsObject()}, gameSettings.current.gameSpeed); // move virus          
         }
         return () => { // remove intervals when unmount or hidden
             window.removeEventListener("keydown", handleKeyDown);
@@ -116,17 +134,25 @@ export default function GameWindow(props: IModal){
 
     //handle difficulty
     useEffect(()=>{
-        if(score >= 10){
-            const ten= Math.floor(score/10);
-            console.log(ten)
-            setGameLevel(difficulties[ten]);
-            ten%2 === 1 ? spawnSpeed -= 500 : virusSpeed += 5;
+        const ten= Math.floor(score/10);
+        if(score >= 10 && !difficulties[ten].reach){ // change difficulty every ten
+            difficulties[ten].reach = true
+            setGameLevel(difficulties[ten].name);   
+                ten < 4 ? gameSettings.current.spawnSpeed -= 300 : gameSettings.current.spawnSpeed -= 500;
+                console.log(gameSettings.current.spawnSpeed)
+                gameSettings.current.virusSpeed += 5;
+                console.log(gameSettings.current.virusSpeed)
+                if(ten === 4){
+                    gameSettings.current.playerSpeed += 5;
+                }
+
         }
     }, [score])
 
     // handle Game Over
     useEffect(()=>{
         if(lives < 1){
+            // retrieve initial values for all game settings
             setGameOver(true);
             clearInterval(intervalsRef.current.generateVirus);
             clearInterval(intervalsRef.current.movementsObjects);
@@ -135,6 +161,11 @@ export default function GameWindow(props: IModal){
             setVirusList(()=> []);
             setShootsList(()=>[]);
             setUpcomingCollisions(()=>[]);
+            setGameLevel(difficulties[0].name)
+            for(const key in gameSettings.current){
+                const typedKey = key as keyof IGameSettings;
+                gameSettings.current[typedKey] = initialsGameSettings[typedKey];
+            }
         }
     }, [lives])
 
@@ -164,7 +195,7 @@ export default function GameWindow(props: IModal){
             const updatedList = prevList
                 .map((virus) => ({ 
                     ...virus,
-                    y: virus.y + virusSpeed, 
+                    y: virus.y + gameSettings.current.virusSpeed, 
                 }));
                 
             // Count how many viruses are out of bounds
@@ -191,7 +222,7 @@ export default function GameWindow(props: IModal){
             prevList
                 .map((shoot) => ({ // update shoots coord
                     ...shoot,
-                    y: shoot.y - shootsSpeed, // depend on bottom
+                    y: shoot.y - gameSettings.current.shootsSpeed, // depend on bottom
                 }))
                 .filter((shoot) => shoot.y > 0 + shoot.height) // remove virus out of window
         );  

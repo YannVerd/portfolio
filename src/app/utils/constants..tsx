@@ -39,14 +39,14 @@ export const gameObjectType = {
 }
 
 export const difficulties = [
-    "very easy",
-    "easy",
-    "normal",
-    "hard",
-    "very hard",
-    "insane",
-    "impossible",
-    "mouahahahahahah"
+    {name:"very easy", reach: true},
+    {name:"easy", reach: false},
+    {name:"normal", reach: false},
+    {name:"hard", reach: false},
+    {name:"very hard", reach: false},
+    {name:"insane", reach: false},
+    {name:"impossible", reach: false},
+    {name:"mouahahahahahah", reach: false}
 ]
 
     
