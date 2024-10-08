@@ -317,7 +317,7 @@ export default function GameWindow(props: IModal){
                 }
             });
         });
-    
+        
         if (collisionDetected) {
             setUpcomingCollisions((prevList) => [...prevList, ...newCollisions]);
         }
