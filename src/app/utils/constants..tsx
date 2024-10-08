@@ -30,7 +30,23 @@ export const links = [
     {name: "GitHub", img:"/github-50.png", imgWhite:"/github-white-50.png", link: "https://github.com/YannVerd"}, 
     {name: "LinkedIn", img:"/linkedin-50.png",imgWhite:"/linkedin-white-50.png", link: "https://www.linkedin.com/in/yann-verdier-a7b457271/"}, 
     {name: "CV", img:"/cv-50.png", imgWhite:"/cv-white-50.png", link: "#"}
+];
+export const sections = [{name: "Compétences" , id: "skillsSection"}, {name: "Projets" , id: "projectsSection"} ];
+
+export const gameObjectType = {
+    virus: "virus",
+    shoot: "shoot"
+}
+
+export const difficulties = [
+    {name:"very easy", reach: true},
+    {name:"easy", reach: false},
+    {name:"normal", reach: false},
+    {name:"hard", reach: false},
+    {name:"very hard", reach: false},
+    {name:"insane", reach: false},
+    {name:"impossible", reach: false},
+    {name:"mouahahahahahah", reach: false}
 ]
-export const sections = [{name: "Compétences" , id: "skillsSection"}, {name: "Projets" , id: "projectsSection"} ]
 
     
