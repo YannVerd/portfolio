@@ -228,6 +228,9 @@ export default function GameWindow(props: IModal){
                 const typedKey = key as keyof IGameSettings;
                 gameSettings.current[typedKey] = initialsGameSettings[typedKey];
             }
+            for(let i=1; i < difficulties.length; i++){// reset to reach property to false except te first (i = 0)
+                difficulties[i].reach = false;
+            }
         }
     }, [lives])
 
