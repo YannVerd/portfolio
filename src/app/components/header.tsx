@@ -30,7 +30,7 @@ export default function Header(props: IHeader){
                 </div>
             </div>
             <div className="flex justify-end w-[80%] lg:w-[50%]">
-                <nav className="hidden md:flex flex-row justify-end items-center mr-6 md:gap-28">
+                <nav className="hidden md:flex flex-row justify-end items-center mr-6 gap-28">
                     {
                         sections.map((section, index) => {
                             return (
@@ -38,7 +38,6 @@ export default function Header(props: IHeader){
                             );
                         })                  
                     }
-                    
                 </nav> 
                 <SwitcherTheme />
             </div>
