@@ -49,7 +49,7 @@ export default function GameWindow(props: IModal){
     const [gameLevel, setGameLevel] = useState (difficulties[0].name);
     const [instructions, setInstructions]= useState({moves: "left/right arrows", shoot: 'space'})
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
-    const threshold = 10; // swipe sensibility in px
+    const threshold = 2; // swipe sensibility in px
     const touchStartX = useRef(0); // initial x position of touch
     const touchStartTime = useRef<number | null>(null); // start time touch
 
@@ -78,7 +78,8 @@ export default function GameWindow(props: IModal){
     // constants physics game
     const playerWidth = 48;
     const playerHeight = 25;
-    const virusHitBox = 40;
+    const virusWidth= 40;
+    const virusHeight = 35;
   
     
     // intervals
@@ -123,7 +124,7 @@ export default function GameWindow(props: IModal){
         if (touchStartTime.current !== null) {
             const timeTouch =e.timeStamp - touchStartTime.current;
             const touch = e.changedTouches[0];
-            if (timeTouch < 300 && touch) {
+            if (timeTouch < 180 && touch) {
                 generateObject('shoot');
             }
         }
@@ -246,7 +247,7 @@ export default function GameWindow(props: IModal){
             case gameObjectType.virus:
                 setVirusList((prevList) => [
                     ...prevList,
-                    { id: currentId.current, x: Math.random() * (gameSizes.width - virusHitBox), y: 0, width: virusHitBox, height: virusHitBox, upcomingCollision: false },
+                    { id: currentId.current, x: Math.random() * (gameSizes.width - virusWidth), y: 0, width: virusWidth, height: virusHeight, upcomingCollision: false },
                 ]);
                 break;
                 
@@ -344,21 +345,22 @@ export default function GameWindow(props: IModal){
             if(updatedCollisions[i].virus && updatedCollisions[i].shoot){
                 if(updatedCollisions[i].virus.y + updatedCollisions[i].virus.height > updatedCollisions[i].shoot.y ) {
                     // update  upcomingCollisions to remove actual object
-                    setUpcomingCollisions((list) => {
-                        const newList = [...list]; 
-                        newList.splice(updatedCollisions[i].index, 1); //remove object into list
-                        return newList; // Retourner la nouvelle liste
-                    });
+                    setUpcomingCollisions((list) => 
+                        list.filter((upcomingCollision)=> 
+                            upcomingCollision.virusId !== updatedCollisions[i].virus.id &&
+                            upcomingCollision.shootId !== updatedCollisions[i].shoot.id
+                        )
+                    );
 
                     // update virus list
-                    setVirusList((list) => {
-                        return list.filter(virus => virus.id !== updatedCollisions[i].virus.id);
-                    });
+                    setVirusList((list) => 
+                         list.filter(virus => virus.id !== updatedCollisions[i].virus.id)
+                    );
 
                     // update shoots list
-                    setShootsList((list) => {
-                        return list.filter(shoot => shoot.id !== updatedCollisions[i].shoot.id); 
-                    });
+                    setShootsList((list) => 
+                     list.filter(shoot => shoot.id !== updatedCollisions[i].shoot.id)
+                    );
                     setScore((score)=>score+1)
                 }
             }
@@ -368,7 +370,7 @@ export default function GameWindow(props: IModal){
 
 
     return (
-        <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
+        <div className="flex-col w-[95%] h-[95%] lg:w-[70%] lg:h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-2 lg:left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
             <div className="flex justify-between items-center w-full bg-gradient-to-r from-win98blue1 via-win98blue2 to-win98blue3 border-2 border-gray-400">
                 <h3 className="text-xl ml-2">Virus attack</h3>
                 <button className="bg-gray-400 hover:bg-gray-200 text-black font-bold p-2 border my-1 mr-1" onClick={()=> { props.hook('game')}}>x</button>
