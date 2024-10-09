@@ -49,7 +49,7 @@ export default function GameWindow(props: IModal){
     const [gameLevel, setGameLevel] = useState (difficulties[0].name);
     const [instructions, setInstructions]= useState({moves: "left/right arrows", shoot: 'space'})
     const [upcomingCollisions, setUpcomingCollisions] = useState<Array<IObjectCollision>>([]);
-    const threshold = 10; // swipe sensibility in px
+    const threshold = 5; // swipe sensibility in px
     const touchStartX = useRef(0); // initial x position of touch
     const touchStartTime = useRef<number | null>(null); // start time touch
 
@@ -368,7 +368,7 @@ export default function GameWindow(props: IModal){
 
 
     return (
-        <div className="flex-col w-[70%] h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
+        <div className="flex-col w-[95%] h-[95%] lg:w-[70%] lg:h-[80%] fixed border-gray-300 border-2 text-white bg-black shadow-lg left-2 lg:left-[15%] top-[3%] z-50 overflow-hidden" style={{ display: props.isVisible ? 'flex' : 'none'}}>
             <div className="flex justify-between items-center w-full bg-gradient-to-r from-win98blue1 via-win98blue2 to-win98blue3 border-2 border-gray-400">
                 <h3 className="text-xl ml-2">Virus attack</h3>
                 <button className="bg-gray-400 hover:bg-gray-200 text-black font-bold p-2 border my-1 mr-1" onClick={()=> { props.hook('game')}}>x</button>
