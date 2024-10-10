@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { match } from 'assert';
 
 export default function SwitcherTheme (){
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (isDarkMode) {
@@ -11,6 +17,30 @@ export default function SwitcherTheme (){
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  useEffect(()=>{
+    const matchMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    /**
+     * function to setIsDarkMode boolean and add/remove dark's class
+     * @param e media event
+     */
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+      if (matchMedia.matches) {
+        document.documentElement.classList.add('dark'); 
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
+    matchMedia.addEventListener('change', handleThemeChange)
+
+    return ( ()=> {
+      matchMedia.removeEventListener('change', handleThemeChange);
+    }
+
+    )
+  }, [])
 
   return (
       <button

@@ -60,7 +60,7 @@ export default function GameWindow(props: IModal){
     // game settings
     const initialsGameSettings: IGameSettings= {
         virusSpeed: 5,
-        playerSpeed: 10,  
+        playerSpeed: 5,  
         shootsSpeed: 15,  
         gameSpeed: 100,
         spawnSpeed:2500,
@@ -172,11 +172,14 @@ export default function GameWindow(props: IModal){
         if(gameWin.current && props.isVisible && !gameOver){ // test if modal game is visible and div mounted
             setScore(0);
             const { width, height } = gameWin.current.getBoundingClientRect();
+            
             setGameSizes((win) => {
                 win.height = height;
                 win.width = width;
                 return win;
             });
+            gameSettings.current.playerSpeed = gameSizes.width / 100;
+            console.log(gameSettings.current.playerSpeed)
             playerXRef.current = Math.floor(width/2);
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of the game window
             intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, gameSettings.current.spawnSpeed); // generate Virus each 4 seconds
