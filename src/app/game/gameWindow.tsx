@@ -180,7 +180,6 @@ export default function GameWindow(props: IModal){
                 return win;
             });
             gameSettings.current.playerSpeed = gameSizes.width / 100;
-            console.log(gameSettings.current.playerSpeed)
             playerXRef.current = Math.floor(width/2);
             setPlayerX(Math.floor(width/2)); // set initial play position to the middel of the game window
             intervalsRef.current.generateVirus = setInterval(()=>{generateObject(gameObjectType.virus)}, gameSettings.current.spawnSpeed); // generate Virus each 4 seconds
