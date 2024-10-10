@@ -60,8 +60,7 @@ export default function GameWindow(props: IModal){
     // game settings
     const initialsGameSettings: IGameSettings= {
         virusSpeed: 5,
-        playerSpeed: 5,  
-        playerSpeed: 5,  
+        playerSpeed: 5,   
         shootsSpeed: 15,  
         gameSpeed: 100,
         spawnSpeed:2500,
