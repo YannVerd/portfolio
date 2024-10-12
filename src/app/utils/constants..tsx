@@ -23,6 +23,11 @@ export const projects = [
         name: "Conectim",
         description: "Mon stage dans la Start-up éponyme qui m'a permit de développer, entre autres, une messagerie dans un évènement et la programmation d'évènements récurrents",
         link: "https://conectim.fr/",
+    },
+    {
+        name: "MicroServiceAlert",
+        description: "micro service .Net de gestion de notifications/alerte pour une application Angular/Nodejs (typescript), avec implémentation RabbitMQ",
+        link : "https://github.com/YannVerd/microServiceAlert/tree/main"
     }
 
 ]
