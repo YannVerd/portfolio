@@ -19,7 +19,7 @@ export default function ProjectCard(props: IProjectCard){
                     className="object-contains w-full h-full rounded-lg shadow-lg"
                 />
             </div>
-            <div className="flex flex-col justify-center gap-4 items-center lg:items-start object-cover ml-2 h-44">
+            <div className="flex flex-col justify-center gap-4 items-center lg:items-start object-cover ml-2 h-auto lg:h-44 mt-2 lg:mt-0">
                     <h4 className="text-2xl font-semibold mr-2 text-secondary">{`Projet ${props.name}`}</h4>
                     <p className="text-justify lg:text-start dark:text-white text-black">{props.description}</p>
             </div>
